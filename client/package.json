@@ -1,0 +1,25 @@
+{
+  "name": "vuetrain",
+  "private": true,
+  "version": "0.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.14",
+    "element-plus": "^2.3.6",
+    "postcss": "^8.4.24",
+    "postcss-preset-env": "^8.4.2",
+    "tailwindcss": "^3.3.2",
+    "vue": "^3.2.47"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.1.0",
+    "unplugin-auto-import": "^0.16.4",
+    "unplugin-vue-components": "^0.25.1",
+    "vite": "^4.3.9"
+  }
+}
