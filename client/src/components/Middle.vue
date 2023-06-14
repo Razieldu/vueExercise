@@ -1,10 +1,14 @@
 <template>
-  <div ></div>
+  <div>
+    <Left></Left>
+  </div>
 </template>
 
 <script>
-export default {};
+import Left from "./Left.vue";
+export default {
+  components: {
+    Left,
+  },
+};
 </script>
-
-<style>
-</style>
