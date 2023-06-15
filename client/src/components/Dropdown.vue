@@ -1,11 +1,17 @@
 <template>
   <div class="p-15 h-full max-h-300">
-    <el-input placeholder="請輸入..." class="mt-3" />
+    <el-input
+      @blur="handleAddData(eachindex, inputContent)"
+      v-model="inputContent"
+      placeholder="請輸入..."
+      class="mt-3 mb-3"
+    />
     <EachDropdown
       :eachindex="eachindex"
       v-for="(eachData, index) in data[eachindex]"
       :eachDataObjectFromMainArray="eachData"
       :key="index"
+      :eachId="eachData.id"
     />
   </div>
 </template>
@@ -14,6 +20,7 @@
 import { useLeftDataStore } from "../store/LeftDataHandleStore";
 import { storeToRefs } from "pinia";
 import EachDropdown from "./EachDropdown.vue";
+import { ref } from "vue";
 export default {
   name: "Dropdown",
   props: {
@@ -23,10 +30,10 @@ export default {
     },
   },
   components: {
-    InputField,
     EachDropdown,
   },
   setup() {
+    const inputContent = ref("");
     const leftDataStore = useLeftDataStore();
     const { data, open } = storeToRefs(leftDataStore);
     const {
@@ -36,9 +43,14 @@ export default {
       handleSelect,
       clearSelectState,
     } = leftDataStore;
-    console.log(data);
+    const handleAddData = (index, data) => {
+      handleNewData(index, data);
+      inputContent.value = "";
+    };
     return {
       data,
+      inputContent,
+      handleAddData,
     };
   },
 };

@@ -1,6 +1,7 @@
 const express = require('express');
 const request = require('request');
 const cors = require('cors'); // 引入 CORS 中间件
+require('dotenv').config();
 
 const app = express();
 
@@ -8,11 +9,11 @@ app.use(cors()); // 使用 CORS 中间件
 
 // 设置代理路由
 app.post('/proxy', (req, res) => {
-  const url = 'http://10.0.10.131/CRM_WebAPI/Marking/GET_MemberData';
+  const url = process.env.API_DATA;
   req.pipe(request.post(url)).pipe(res);
 });
 app.post('/proxy2', (req, res) => {
-  const url = 'http://10.0.10.131/CRM_WebAPI/Marking/Login?id=2&password=2';
+  const url = process.env.APT_USER;
   req.pipe(request.post(url)).pipe(res);
 });
 // 启动服务器

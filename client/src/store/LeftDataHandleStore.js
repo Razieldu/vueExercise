@@ -41,6 +41,7 @@ export const useLeftDataStore = defineStore("leftData", {
         select: false,
       };
       this.data[index].push(newObject);
+      console.log(this.data[index])
     },
 
     deleteData(index, id) {
