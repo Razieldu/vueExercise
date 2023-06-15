@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import Left from "./Left.vue";
 export default {
   components: {

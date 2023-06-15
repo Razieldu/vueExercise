@@ -6,7 +6,7 @@
 </template>
 
 <script>
-export default { components: { Middle, Top } };
 import Middle from "./components/Middle.vue";
 import Top from "./components/Top.vue";
+export default { components: { Middle, Top } };
 </script>

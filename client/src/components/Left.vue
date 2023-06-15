@@ -1,15 +1,16 @@
 <template>
   <div class="w-1/5 bg-gray-200 h-screen fixed top-14 left-0 p-5 z-20">
-    <div
-      class="p-2 text-white flex justify-between"
-      v-for="(title, index) in titles"
-      :key="index"
-      :style="{ backgroundColor: title.color }"
-      @click="handleopen(index)"
-    >
-      <h4>{{ title.name }}</h4>
-      <el-icon><ArrowDownBold v-if="!open[index]" /></el-icon>
-      <el-icon><ArrowUpBold v-if="open[index]" /></el-icon>
+    <div v-for="(title, index) in titles" :key="index">
+      <div
+        class="p-2 text-white flex justify-between"
+        :style="{ backgroundColor: title.color }"
+        @click="handleopen(index)"
+      >
+        <h4>{{ title.name }}</h4>
+        <el-icon v-if="!open[index]"><ArrowDownBold /></el-icon>
+        <el-icon v-if="open[index]"> <ArrowUpBold /></el-icon>
+      </div>
+      <Dropdown  v-if="open[index]" :eachindex="index"  :key="index" />
     </div>
   </div>
 </template>
@@ -18,7 +19,11 @@
 import { ref } from "vue";
 import { useLeftDataStore } from "../store/LeftDataHandleStore";
 import { storeToRefs } from "pinia";
+import Dropdown from "./Dropdown.vue";
 export default {
+  components: {
+    Dropdown,
+  },
   setup() {
     const leftDataStore = useLeftDataStore();
     const { data, open } = storeToRefs(leftDataStore);
@@ -39,13 +44,13 @@ export default {
     ]);
     return {
       titles,
-      data,
+      // data,
       open,
-      handleNewData,
-      deleteData,
+      // handleNewData,
+      // deleteData,
       handleopen,
-      handleSelect,
-      clearSelectState,
+      // handleSelect,
+      // clearSelectState,
     };
   },
 };
