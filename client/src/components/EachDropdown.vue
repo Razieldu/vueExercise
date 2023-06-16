@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex justify-between items-center p-2 border-transparent border-2 rounded-5 mt-2"
+    class="flex justify-between items-center px-2 pt-4 pb-6 border-transparent border-2 rounded-5 mt-2 "
   >
     <h4>{{ eachDataObjectFromMainArray.name }}</h4>
     <div class="flex items-center">

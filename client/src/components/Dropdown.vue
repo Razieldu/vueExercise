@@ -4,7 +4,7 @@
       @blur="handleAddData(eachindex, inputContent)"
       v-model="inputContent"
       placeholder="請輸入..."
-      class="mt-3 mb-3"
+      class="mt-3 mb-1"
     />
     <EachDropdown
       :eachindex="eachindex"

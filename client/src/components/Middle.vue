@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-20 flex flex-wrap">
+  <div class="mt-mt18 ml-3 flex">
     <Left/>
     <Right/>
   </div>
