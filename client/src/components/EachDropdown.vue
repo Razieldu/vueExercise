@@ -1,12 +1,20 @@
 <template>
   <div
-    class="flex justify-between items-center px-2 pt-4 pb-6 border-transparent border-2 rounded-5 mt-2 "
+    class="flex justify-between items-center px-2 py-4 border-transparent border-2 rounded-5 mt-2"
   >
     <h4>{{ eachDataObjectFromMainArray.name }}</h4>
     <div class="flex items-center">
       <el-checkbox style="margin-right: 20px" label="" size="small" />
-      <el-button type="primary" size="small">搜尋</el-button>
-      <el-button @click="deleteData(eachindex,eachId)" type="primary" size="small"
+      <el-button
+        @click="searchGoalByColumn(titleData[eachindex].name, eachDataObjectFromMainArray.name)"
+        type="primary"
+        size="small"
+        >搜尋</el-button
+      >
+      <el-button
+        @click="deleteData(eachindex, eachId)"
+        type="primary"
+        size="small"
         >刪除</el-button
       >
     </div>
@@ -15,6 +23,8 @@
 
 <script lang="js">
 import { useLeftDataStore } from "../store/LeftDataHandleStore";
+import { useRightDataStore } from "../store/DataHandleStore";
+import {inject} from "vue"
 export default {
   name: "EachDropdown",
   props:{
@@ -32,6 +42,7 @@ export default {
     }
   },
   setup(){
+    const DataHandleStore =useRightDataStore()
     const leftDataStore = useLeftDataStore();
     const {
       handleNewData,
@@ -40,8 +51,14 @@ export default {
       handleSelect,
       clearSelectState,
     } = leftDataStore;
+    const {
+      searchGoalByColumn
+    } = DataHandleStore
+    const titleData = inject("titles")
     return{
-    deleteData  
+    deleteData, 
+    searchGoalByColumn,
+    titleData 
     }
   }
 

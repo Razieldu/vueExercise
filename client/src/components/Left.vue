@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref,provide} from "vue";
 import { useLeftDataStore } from "../store/LeftDataHandleStore";
 import { storeToRefs } from "pinia";
 import Dropdown from "./Dropdown.vue";
@@ -42,6 +42,7 @@ export default {
       { name: "郵遞區號", color: "grey" },
       { name: "地址", color: "silver" },
     ]);
+    provide("titles",titles)
     return {
       titles,
       // data,
