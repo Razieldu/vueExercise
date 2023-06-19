@@ -11,28 +11,42 @@
       stripe
       :data="apiData"
       style="height: 82vh; width: 80vw"
-      @row-click="handleRowEdit"
     >
-      <el-table-column :key="0" label="姓名" prop="姓名" width="120" fixed ></el-table-column> 
+      <el-table-column :key="'姓名'" label="姓名" prop="姓名" width="120" fixed>
+        <!-- <el-input v-if="editMode"></el-input> -->
+      </el-table-column>
       <el-table-column
-        v-for="(eachObj, index) in contentTitle"
-        :key="index"
-        :label="eachObj"
-        :prop="eachObj"
+        v-for="eachObj in contentTitle"
+        :key="eachObj.key"
+        :label="eachObj.title"
+        :prop="eachObj.title"
         :width="eachObj === 'Email' ? 250 : 150"
-      />
-      <el-table-column fixed="right" label="操作" width="140">
-        <!-- <template #header>
-          <el-input v-model="search" size="small" placeholder="搜尋" />
-        </template> -->
+      >
+        <template #default="{ row, $index }">
+          <div v-if="editCell[0] === eachObj.key && editCell[1] === $index">
+            <el-input
+              ref="cellInput"
+              v-model="row[eachObj.key]"
+              :placeholder="`请输入${eachObj.title}`"
+              @blur="editCell.value = []"
+              @change="handleAddressUpdate(editCell)"
+            />
+          </div>
+          <div v-else @click="handleCellEdit(eachObj.key, $index)">
+            {{ row[eachObj.key] || "無" }}
+          </div>
+        </template>
+        <!-- <el-input></el-input> -->
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" width="150">
         <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
-            >修改</el-button
-          >
+          <el-button size="small" @click="handleEditMode">{{
+            buttonContent
+          }}</el-button>
           <el-button
             size="small"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
+            @click="handleRowDelete(scope.$index)"
             >刪除</el-button
           >
         </template>
@@ -49,30 +63,48 @@ export default {
   setup() {
     const contentTitle = ref([
       // "姓名",
-      "Email",
-      "服務單位",
-      "職稱",
-      "郵遞區號",
-      "地址",
-      "郵遞區號2",
-      "地址2",
-      "連絡電話_公司",
-      "連絡電話_秘書",
-      "連絡電話_住宅",
-      "連絡電話_手機",
-      "連絡電話1",
-      "連絡電話2",
-      "傳真電話",
-      "傳真2",
+      { title: "Email", key: "Email" },
+      { title: "服務單位", key: "服務單位" },
+      { title: "職稱", key: "職稱" },
+      { title: "郵遞區號", key: "郵遞區號" },
+      { title: "地址", key: "地址" },
+      { title: "郵遞區號2", key: "郵遞區號2" },
+      { title: "地址2", key: "地址2" },
+      { title: "連絡電話_公司", key: "連絡電話_公司" },
+      { title: "連絡電話_秘書", key: "連絡電話_秘書" },
+      { title: "連絡電話_住宅", key: "連絡電話_住宅" },
+      { title: "連絡電話_手機", key: "連絡電話_手機" },
+      { title: "連絡電話1", key: "連絡電話1" },
+      { title: "連絡電話2", key: "連絡電話2" },
+      { title: "傳真電話", key: "傳真電話" },
+      { title: "傳真2", key: "傳真2" },
     ]);
     const apiData = ref(null);
-    const { fetchData, resetSearchResult } = useRightDataStore();
+    const editMode = ref(false);
+    const editCell = ref([]);
+    const buttonContent = ref("修改");
+    const { fetchData, resetSearchResult, handleRowDelete } =
+      useRightDataStore();
     const { data } = storeToRefs(useRightDataStore());
-    console.log(data);
-    const currentRow = ref();
-    const handleRowEdit = (row )=>{
-    console.log(row)
-    }
+    const handleAddressUpdate = (editCell) => {
+      console.log(`更新单元格：${editCell.value}`);
+    };
+    const handleCellEdit = (colKey, rowIndex) => {
+      if (!editMode.value) return;
+      editCell.value = [colKey, rowIndex];
+      console.log(editCell.value);
+    };
+    const handleEditMode = () => {
+      let oldValue = editMode.value;
+      editMode.value = !oldValue;
+      if (editMode.value === false) {
+        editCell.value = [];
+        buttonContent.value="修改"
+      }else{
+        buttonContent.value="編輯中"
+      }
+      console.log(editMode.value);
+    };
     onMounted(async () => {
       await fetchData();
       apiData.value = data.value;
@@ -82,7 +114,14 @@ export default {
       apiData,
       contentTitle,
       resetSearchResult,
-      handleRowEdit
+      // handleRowEdit,
+      handleRowDelete,
+      editMode,
+      handleCellEdit,
+      handleAddressUpdate,
+      handleEditMode,
+      editCell,
+      buttonContent,
     };
   },
 };

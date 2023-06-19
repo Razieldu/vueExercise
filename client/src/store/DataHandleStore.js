@@ -52,5 +52,9 @@ export const useRightDataStore = defineStore("rightData", {
     resetSearchResult() {
       this.data = this.saveData;
     },
+    handleRowDelete(index){
+     this.data.splice(index,1) 
+     this.saveData.splice(index,1) 
+    }
   },
 });
