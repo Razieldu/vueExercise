@@ -36,7 +36,7 @@ export default {
     } = leftDataStore;
     const titles = ref([
       { name: "姓名", color: "grey" },
-      { name: "電子郵件", color: "silver" },
+      { name: "Email", color: "silver" },
       { name: "服務單位", color: "grey" },
       { name: "職稱", color: "silver" },
       { name: "郵遞區號", color: "grey" },
