@@ -3,7 +3,7 @@
     <div>
       <div class="pb-2 flex">
         <el-button @click="resetSearchResult()" type="primary">重置</el-button>
-        <el-button type="primary">新增</el-button>
+        <el-button @click="handleAddNewData()" type="primary">新增</el-button>
       </div>
     </div>
     <el-table
@@ -13,7 +13,20 @@
       style="height: 82vh; width: 80vw"
     >
       <el-table-column :key="'姓名'" label="姓名" prop="姓名" width="120" fixed>
-        <!-- <el-input v-if="editMode"></el-input> -->
+        <template #default="{ row, $index }">
+          <div v-if="currentEditCell[0] ==='姓名'&& currentEditCell[1] === $index">
+            <el-input
+              ref="cellInput"
+              v-model="row['姓名']"
+              :placeholder="`请输入${'姓名'}`"
+              @blur="currentEditCell.value = []"
+              @change="handleCellUpdate(currentEditCell)"
+            />
+          </div>
+          <div v-else @click="handleCellEdit('姓名', $index)">
+            {{ row['姓名'] || "無" }}
+          </div>
+        </template>
       </el-table-column>
       <el-table-column
         v-for="eachObj in contentTitle"
@@ -23,20 +36,19 @@
         :width="eachObj === 'Email' ? 250 : 150"
       >
         <template #default="{ row, $index }">
-          <div v-if="editCell[0] === eachObj.key && editCell[1] === $index">
+          <div v-if="currentEditCell[0] === eachObj.key && currentEditCell[1] === $index">
             <el-input
               ref="cellInput"
               v-model="row[eachObj.key]"
               :placeholder="`请输入${eachObj.title}`"
-              @blur="editCell.value = []"
-              @change="handleAddressUpdate(editCell)"
+              @blur="currentEditCell.value = []"
+              @change="handleCellUpdate(currentEditCell)"
             />
           </div>
           <div v-else @click="handleCellEdit(eachObj.key, $index)">
             {{ row[eachObj.key] || "無" }}
           </div>
         </template>
-        <!-- <el-input></el-input> -->
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
         <template #default="scope">
@@ -44,9 +56,9 @@
             buttonContent
           }}</el-button>
           <el-button
-            size="small"
-            type="danger"
-            @click="handleRowDelete(scope.$index)"
+           size="small"
+             type="danger"
+            @click="handleRowDelete(scope.row.m_id)"
             >刪除</el-button
           >
         </template>
@@ -62,7 +74,6 @@ import { storeToRefs } from "pinia";
 export default {
   setup() {
     const contentTitle = ref([
-      // "姓名",
       { title: "Email", key: "Email" },
       { title: "服務單位", key: "服務單位" },
       { title: "職稱", key: "職稱" },
@@ -81,27 +92,27 @@ export default {
     ]);
     const apiData = ref(null);
     const editMode = ref(false);
-    const editCell = ref([]);
+    const currentEditCell = ref([]);
     const buttonContent = ref("修改");
-    const { fetchData, resetSearchResult, handleRowDelete } =
+    const { fetchData, resetSearchResult, handleRowDelete, handleAddNewData } =
       useRightDataStore();
     const { data } = storeToRefs(useRightDataStore());
-    const handleAddressUpdate = (editCell) => {
-      console.log(`更新单元格：${editCell.value}`);
+    const handleCellUpdate = (currentEditCell) => {
+      console.log(`更新：${currentEditCell.value}`);
     };
     const handleCellEdit = (colKey, rowIndex) => {
       if (!editMode.value) return;
-      editCell.value = [colKey, rowIndex];
-      console.log(editCell.value);
+      currentEditCell.value = [colKey, rowIndex];
+      console.log(currentEditCell.value);
     };
     const handleEditMode = () => {
       let oldValue = editMode.value;
       editMode.value = !oldValue;
       if (editMode.value === false) {
-        editCell.value = [];
-        buttonContent.value="修改"
-      }else{
-        buttonContent.value="編輯中"
+        currentEditCell.value = [];
+        buttonContent.value = "修改";
+      } else {
+        buttonContent.value = "儲存";
       }
       console.log(editMode.value);
     };
@@ -118,9 +129,10 @@ export default {
       handleRowDelete,
       editMode,
       handleCellEdit,
-      handleAddressUpdate,
+      handleCellUpdate,
       handleEditMode,
-      editCell,
+      handleAddNewData,
+      currentEditCell,
       buttonContent,
     };
   },

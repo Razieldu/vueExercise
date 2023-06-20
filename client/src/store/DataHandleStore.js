@@ -2,8 +2,8 @@ import { defineStore } from "pinia";
 
 export const useRightDataStore = defineStore("rightData", {
   state: () => ({
-    data: null,
-    saveData: null,
+    data: [],
+    saveData: [],
     isFirst: true,
   }),
   actions: {
@@ -20,7 +20,7 @@ export const useRightDataStore = defineStore("rightData", {
         if (response.ok) {
           const result = await response.json();
           this.data = result.Data;
-          this.saveData = result.Data;
+          this.saveData = JSON.parse(JSON.stringify(result.Data));
           return this.data;
         } else {
           throw new Error("Request failed.");
@@ -30,9 +30,8 @@ export const useRightDataStore = defineStore("rightData", {
       }
     },
     searchGoalByColumn(titieValue, value) {
-      console.log(titieValue, value);
       let searchResult = [];
-      let useData = this.isFirst ? this.saveData : this.data;
+      let useData = this.isFirst ? this.saveData :this.data;
       // console.log(useData["0"])
       let keyWord = new RegExp(value);
       for (let indexNum in useData) {
@@ -46,15 +45,22 @@ export const useRightDataStore = defineStore("rightData", {
       }
       console.log(searchResult);
       searchResult.length > 0 ? (this.data = searchResult) : null;
+      console.log(this.data)
       this.isFirst = false;
       // console.log(`篩選後更新資料${[...gridData]}`);
     },
     resetSearchResult() {
-      this.data = this.saveData;
+      this.data = this.saveData
     },
-    handleRowDelete(index){
-     this.data.splice(index,1) 
-     this.saveData.splice(index,1) 
-    }
+    handleRowDelete(id) {
+       this.data=this.data.filter(one=>one.m_id!==id)
+       this.saveData=this.saveData.filter(one=>one.m_id!==id)
+    },
+    handleAddNewData() {
+      this.data.unshift({})
+      this.saveData.unshift({})
+    },
+
+    
   },
 });
