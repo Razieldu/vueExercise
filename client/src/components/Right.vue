@@ -4,27 +4,34 @@
       <div class="pb-2 flex">
         <el-button @click="resetSearchResult()" type="primary">重置</el-button>
         <el-button @click="handleAddNewData()" type="primary">新增</el-button>
+        <el-button @click="exportFile()" type="primary"
+          >Export</el-button
+        >
       </div>
     </div>
     <el-table
       highlight-current-row
       stripe
-      :data="apiData"
+      :data="mainContentData"
       style="height: 82vh; width: 80vw"
     >
       <el-table-column :key="'姓名'" label="姓名" prop="姓名" width="120" fixed>
         <template #default="{ row, $index }">
-          <div v-if="currentEditCell[0] ==='姓名'&& currentEditCell[1] === $index">
+          <div
+            v-if="
+              currentEditCell[0] === '姓名' && currentEditCell[1] === $index
+            "
+          >
             <el-input
               ref="cellInput"
               v-model="row['姓名']"
               :placeholder="`请输入${'姓名'}`"
               @blur="currentEditCell.value = []"
-              @change="handleCellUpdate(currentEditCell)"
+              @change="handleUpdateData(row)"
             />
           </div>
           <div v-else @click="handleCellEdit('姓名', $index)">
-            {{ row['姓名'] || "無" }}
+            {{ row["姓名"] || "無" }}
           </div>
         </template>
       </el-table-column>
@@ -36,13 +43,18 @@
         :width="eachObj === 'Email' ? 250 : 150"
       >
         <template #default="{ row, $index }">
-          <div v-if="currentEditCell[0] === eachObj.key && currentEditCell[1] === $index">
+          <div
+            v-if="
+              currentEditCell[0] === eachObj.key &&
+              currentEditCell[1] === $index
+            "
+          >
             <el-input
               ref="cellInput"
               v-model="row[eachObj.key]"
               :placeholder="`请输入${eachObj.title}`"
               @blur="currentEditCell.value = []"
-              @change="handleCellUpdate(currentEditCell)"
+              @change="handleUpdateData(row)"
             />
           </div>
           <div v-else @click="handleCellEdit(eachObj.key, $index)">
@@ -56,8 +68,8 @@
             buttonContent
           }}</el-button>
           <el-button
-           size="small"
-             type="danger"
+            size="small"
+            type="danger"
             @click="handleRowDelete(scope.row.m_id)"
             >刪除</el-button
           >
@@ -71,6 +83,7 @@
 import { onMounted, ref, watch } from "vue";
 import { useRightDataStore } from "../store/DataHandleStore";
 import { storeToRefs } from "pinia";
+import { utils, writeFileXLSX } from "xlsx";
 export default {
   setup() {
     const contentTitle = ref([
@@ -90,16 +103,13 @@ export default {
       { title: "傳真電話", key: "傳真電話" },
       { title: "傳真2", key: "傳真2" },
     ]);
-    const apiData = ref(null);
+    const mainContentData = ref(null);
     const editMode = ref(false);
     const currentEditCell = ref([]);
     const buttonContent = ref("修改");
-    const { fetchData, resetSearchResult, handleRowDelete, handleAddNewData } =
+    const { fetchData, resetSearchResult, handleRowDelete, handleAddNewData,handleUpdateData } =
       useRightDataStore();
     const { data } = storeToRefs(useRightDataStore());
-    const handleCellUpdate = (currentEditCell) => {
-      console.log(`更新：${currentEditCell.value}`);
-    };
     const handleCellEdit = (colKey, rowIndex) => {
       if (!editMode.value) return;
       currentEditCell.value = [colKey, rowIndex];
@@ -114,24 +124,31 @@ export default {
       } else {
         buttonContent.value = "儲存";
       }
-      console.log(editMode.value);
+      // console.log(editMode.value);
+    };
+    const exportFile = () => {
+      const ws = utils.json_to_sheet(mainContentData.value);
+      const wb = utils.book_new();
+      utils.book_append_sheet(wb, ws, "Data");
+      writeFileXLSX(wb, `會員資料_${new Date().toLocaleString()}`);
     };
     onMounted(async () => {
       await fetchData();
-      apiData.value = data.value;
+      mainContentData.value = data.value;
     });
-    watch(data, (newData) => (apiData.value = newData));
+    watch(data, (newData) => (mainContentData.value = newData));
     return {
-      apiData,
+      mainContentData,
       contentTitle,
       resetSearchResult,
       // handleRowEdit,
       handleRowDelete,
       editMode,
-      handleCellEdit,
-      handleCellUpdate,
+      handleCellEdit,   
       handleEditMode,
       handleAddNewData,
+      exportFile,
+      handleUpdateData,
       currentEditCell,
       buttonContent,
     };

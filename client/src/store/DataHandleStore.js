@@ -51,6 +51,8 @@ export const useRightDataStore = defineStore("rightData", {
     },
     resetSearchResult() {
       this.data = [...this.saveData];
+      console.log(this.data,"DATA")
+      console.log(this.saveData,"SAVEDATA")
     },
     handleRowDelete(id) {
       this.data = this.data.filter((one) => one.m_id !== id);
@@ -59,8 +61,25 @@ export const useRightDataStore = defineStore("rightData", {
     handleAddNewData() {
       let newId = Math.floor(Math.random() * 10000);
       let newObj = { m_id: newId };
-      this.data.unshift({...newObj});
-      this.saveData.unshift({...newObj});
+      this.data.unshift({ ...newObj });
+      this.saveData.unshift({ ...newObj });
+    },
+    handleUpdateData(row) {
+      console.log(row)
+      this.data.map((one) => {
+        if (one.m_id === row.m_id) {
+          let updateObj = { ...one, ...row };
+          console.log(updateObj)
+          return updateObj;
+        }
+      });
+      this.saveData.map((one) => {
+        if (one.m_id === row.m_id) {
+          let updateObj = { ...one, ...row };
+          console.log(updateObj)
+          return updateObj;
+        }
+      });
     },
   },
 });
