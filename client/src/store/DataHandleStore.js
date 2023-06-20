@@ -31,7 +31,7 @@ export const useRightDataStore = defineStore("rightData", {
     },
     searchGoalByColumn(titieValue, value) {
       let searchResult = [];
-      let useData = this.isFirst ? this.saveData :this.data;
+      let useData = this.isFirst ? this.saveData : this.data;
       // console.log(useData["0"])
       let keyWord = new RegExp(value);
       for (let indexNum in useData) {
@@ -45,22 +45,22 @@ export const useRightDataStore = defineStore("rightData", {
       }
       console.log(searchResult);
       searchResult.length > 0 ? (this.data = searchResult) : null;
-      console.log(this.data)
+      console.log(this.data);
       this.isFirst = false;
       // console.log(`篩選後更新資料${[...gridData]}`);
     },
     resetSearchResult() {
-      this.data = this.saveData
+      this.data = [...this.saveData];
     },
     handleRowDelete(id) {
-       this.data=this.data.filter(one=>one.m_id!==id)
-       this.saveData=this.saveData.filter(one=>one.m_id!==id)
+      this.data = this.data.filter((one) => one.m_id !== id);
+      this.saveData = this.saveData.filter((one) => one.m_id !== id);
     },
     handleAddNewData() {
-      this.data.unshift({})
-      this.saveData.unshift({})
+      let newId = Math.floor(Math.random() * 10000);
+      let newObj = { m_id: newId };
+      this.data.unshift({...newObj});
+      this.saveData.unshift({...newObj});
     },
-
-    
   },
 });
