@@ -103,7 +103,7 @@ export default {
       { title: "傳真電話", key: "傳真電話" },
       { title: "傳真2", key: "傳真2" },
     ]);
-    const mainContentData = ref(null);
+    const mainContentData = ref([]);
     const editMode = ref(false);
     const currentEditCell = ref([]);
     const buttonContent = ref("修改");
@@ -133,8 +133,8 @@ export default {
       writeFileXLSX(wb, `會員資料_${new Date().toLocaleString()}`);
     };
     onMounted(async () => {
-      await fetchData();
-      mainContentData.value = data.value;
+      const mainData = await fetchData();
+      mainContentData.value = mainData;
     });
     watch(data, (newData) => (mainContentData.value = newData));
     return {
