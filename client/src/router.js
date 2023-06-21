@@ -10,8 +10,26 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/',
+      path: "/",
       component: App,
+      children: [
+        {
+          path: "",
+          components: {
+            default: LeftMenu,
+            middle: Middle,
+          },
+          name: "Home",
+        },
+        {
+          path: "titleSearch",
+          components: {
+            default: TitleSearch,
+            middle: Middle,
+          },
+          name: "Search",
+        },
+      ],
     },
   ],
 });

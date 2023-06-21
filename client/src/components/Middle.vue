@@ -1,8 +1,8 @@
 <template>
-  <div class="flex mt-mt18 ml-4 ">
+  <div class="flex mt-mt18 ml-2 h-screen ">
  
-    <!-- <router-view/>  -->
-    <Left></Left>
+    <router-view/> 
+    <!-- <Left></Left> -->
     <!-- <LeftMenu></LeftMenu> -->
     <Right/>
   </div>
