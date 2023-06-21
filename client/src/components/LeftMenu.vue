@@ -1,5 +1,5 @@
 <template>
-  <el-aside style="height: 100vh; margin-top: 3.5rem" >
+   <el-aside style="height: 100vh; width:18%; position:fixed; top:112px" >
     <el-menu
       style="background-color: #f1f5f9; border-color: #f1f5f9"
       default-active="2"
@@ -16,7 +16,7 @@
       </el-menu-item> -->
       <el-menu-item index="2">
         <el-icon><Search /></el-icon>
-        <RouterLink to="/TitleSearch">標題搜尋</RouterLink>
+        <RouterLink to="/titleSearch">標題搜尋</RouterLink>
       </el-menu-item>
       <el-sub-menu index="3">
         <template #title>

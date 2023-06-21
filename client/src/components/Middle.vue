@@ -1,9 +1,9 @@
 <template>
-  <div class="mt-mt18 ml-3 flex">
-    <!-- <router-view name="default"/>
-    <router-view/> -->
-    <!-- <Left></Left> -->
-    <LeftMenu></LeftMenu>
+  <div class="flex mt-mt18 ml-4 ">
+ 
+    <!-- <router-view/>  -->
+    <Left></Left>
+    <!-- <LeftMenu></LeftMenu> -->
     <Right/>
   </div>
 </template>

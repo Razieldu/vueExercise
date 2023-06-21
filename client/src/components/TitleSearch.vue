@@ -1,5 +1,5 @@
 <template>
-  <el-aside style="height: 100vh; margin-top: 3.5rem">
+   <el-aside style="height: 100vh; width:18%; position:fixed; top:112px" >
     <div v-for="(title, index) in titles" :key="index">
       <div
         class="p-2 text-white flex justify-between"

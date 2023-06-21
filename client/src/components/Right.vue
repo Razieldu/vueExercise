@@ -1,5 +1,5 @@
 <template>
-  <div class="ml-4 text-base py-4 bg-red-100">
+  <div class="ml-custom text-base bg-red-100">
     <div>
       <div class="pb-2 flex">
         <el-button @click="resetSearchResult()" type="primary">重置</el-button>
