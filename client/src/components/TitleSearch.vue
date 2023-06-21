@@ -1,5 +1,5 @@
 <template>
-  <div class="w-1/5 bg-gray-200 h-screen fixed top-14 left-0 p-5 z-20">
+  <el-aside style="height: 100vh; margin-top: 3.5rem">
     <div v-for="(title, index) in titles" :key="index">
       <div
         class="p-2 text-white flex justify-between"
@@ -10,17 +10,21 @@
         <el-icon v-if="!open[index]"><ArrowDownBold /></el-icon>
         <el-icon v-if="open[index]"> <ArrowUpBold /></el-icon>
       </div>
-      <Dropdown  v-if="open[index]" :eachindex="index"  :key="index" />
+      <Dropdown v-if="open[index]" :eachindex="index" :key="index" />
     </div>
-  </div>
+    <!-- <div class="flex  justify-center">
+      <h1>返回</h1>
+    </div> -->
+  </el-aside>
 </template>
 
 <script>
-import { ref,provide} from "vue";
+import { ref, provide } from "vue";
 import { useLeftDataStore } from "../store/LeftDataHandleStore";
 import { storeToRefs } from "pinia";
 import Dropdown from "./Dropdown.vue";
 export default {
+  name: "TitleSearch",
   components: {
     Dropdown,
   },
@@ -42,7 +46,7 @@ export default {
       { name: "郵遞區號", color: "grey" },
       { name: "地址", color: "silver" },
     ]);
-    provide("titles",titles)
+    provide("titles", titles);
     return {
       titles,
       // data,

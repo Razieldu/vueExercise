@@ -14,6 +14,7 @@
       :eachId="eachData.id"
     />
   </div>
+
 </template>
 
 <script>

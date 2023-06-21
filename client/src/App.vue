@@ -8,5 +8,5 @@
 <script>
 import Middle from "./components/Middle.vue";
 import Top from "./components/Top.vue";
-export default { components: { Middle, Top } };
+export default { name: "Home", components: { Middle, Top } };
 </script>
