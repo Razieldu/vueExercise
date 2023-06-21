@@ -130,7 +130,7 @@ export default {
       const ws = utils.json_to_sheet(mainContentData.value);
       const wb = utils.book_new();
       utils.book_append_sheet(wb, ws, "Data");
-      writeFileXLSX(wb, `會員資料_${new Date().toLocaleString()}`);
+      writeFileXLSX(wb, `會員資料_${new Date().toLocaleString()}.xlsx`);
     };
     onMounted(async () => {
       const mainData = await fetchData();

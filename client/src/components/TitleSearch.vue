@@ -8,7 +8,7 @@
       >
         <h4>{{ title.name }}</h4>
         <el-icon v-if="!open[index]"><ArrowDownBold /></el-icon>
-        <el-icon v-if="open[index]"> <ArrowUpBold /></el-icon>
+        <el-icon v-else> <ArrowUpBold /></el-icon>
       </div>
       <Dropdown v-if="open[index]" :eachindex="index" :key="index" />
     </div>
