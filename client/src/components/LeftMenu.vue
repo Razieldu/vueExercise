@@ -1,15 +1,15 @@
 <template>
-  <el-aside style="height: auto; width: 18%; position: fixed; top: 112px">
+  <el-aside style="height: 100vh; width: 18%; position: fixed; top: 112px">
     <el-menu
       style="background-color: #f1f5f9; border-color: #f1f5f9"
       unique-opened="true"
-      @open="handleOpen('2-1', ['1', '2-1'])"
-      @close="handleClose('2-1', ['1', '2-1'])"
+      @open="handleOpen"
+      @close="handleClose"
     >
-      <!-- <el-menu-item index="1">
+      <el-menu-item index="2">
         <el-icon><document /></el-icon>
         <span>已儲存的分頁資料</span>
-      </el-menu-item> -->
+      </el-menu-item>
       <el-sub-menu index="1">
         <template #title>
           <el-icon><Search /></el-icon>
@@ -34,10 +34,17 @@
                 <p>{{ eachSearchWordObject.name }}</p>
               </div>
               <div class="grid grid-cols-10 place-items-center col-span-7">
-                <el-button class="col-span-5" type="primary" size="small"
+                <el-button 
+                @click="searchGoalByColumn(titleData[titleIndex].name, eachSearchWordObject.name)"
+                class="col-span-5" type="primary" size="small"
                   >搜尋</el-button
                 >
-                <el-button class="col-span-5" size="small">刪除</el-button>
+                <el-button
+                  @click="deleteData(titleIndex, eachSearchWordObject.id)"
+                  class="col-span-5"
+                  size="small"
+                  >刪除</el-button
+                >
               </div>
             </div>
           </el-menu-item>
@@ -79,14 +86,16 @@
 //   Setting,
 // } from "@element-plus/icons-vue";
 import { RouterLink } from "vue-router";
-import { ref, provide } from "vue";
+import { ref, provide,inject } from "vue";
 import { useLeftDataStore } from "../store/LeftDataHandleStore";
+import { useRightDataStore } from "../store/DataHandleStore";
 import { storeToRefs } from "pinia";
 export default {
   name: "LeftMenu",
   components: {},
   setup() {
     const leftDataStore = useLeftDataStore();
+    const DataHandleStore =useRightDataStore()
     const { data, open } = storeToRefs(leftDataStore);
     const {
       handleNewData,
@@ -95,6 +104,9 @@ export default {
       handleSelect,
       clearSelectState,
     } = leftDataStore;
+    const {
+      searchGoalByColumn
+    } = DataHandleStore
     const titles = ref([
       { name: "姓名", color: "grey", index: "1-1" },
       { name: "Email", color: "silver", index: "2-1" },
@@ -103,14 +115,11 @@ export default {
       { name: "郵遞區號", color: "grey", index: "5-1" },
       { name: "地址", color: "silver", index: "6-1" },
     ]);
-    provide("titles", titles);
-    const handleOpen = (key, keyPath) => {
-
-    };
-    const handleClose = (key, keyPath) => {
-      
-    };
-    
+    const titleData = titles.value
+    // provide("titles", titles);
+    const handleOpen = (key, keyPath) => {};
+    const handleClose = (key, keyPath) => {};
+   
     return {
       handleClose,
       RouterLink,
@@ -118,10 +127,12 @@ export default {
       data,
       open,
       // handleNewData,
-      // deleteData,
+      deleteData,
       handleOpen,
+      searchGoalByColumn,
       // handleSelect,
       // clearSelectState,
+      titleData
     };
   },
 };
