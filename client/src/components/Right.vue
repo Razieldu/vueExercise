@@ -1,5 +1,5 @@
 <template>
-  <div class="ml-custom text-base bg-red-100">
+  <div class="ml-custom text-base bg-red-100 py-0 my-0">
     <div>
       <div class="pb-2 flex">
         <el-button @click="resetSearchResult()" type="primary">重置</el-button>
@@ -13,7 +13,7 @@
       highlight-current-row
       stripe
       :data="mainContentData"
-      style="height: 82vh; width: 80vw"
+      style="height:auto; width: 80vw"
     >
       <el-table-column :key="'姓名'" label="姓名" prop="姓名" width="120" fixed>
         <template #default="{ row, $index }">

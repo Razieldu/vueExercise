@@ -1,10 +1,10 @@
 <template>
-  <el-aside style="height: 100vh; width: 18%; position: fixed; top: 112px">
+  <el-aside style="height: auto; width: 18%; position: fixed; top: 112px">
     <el-menu
       style="background-color: #f1f5f9; border-color: #f1f5f9"
-      default-active="2"
-      @open="handleOpen"
-      @close="handleClose"
+      unique-opened="true"
+      @open="handleOpen('2-1', ['1', '2-1'])"
+      @close="handleClose('2-1', ['1', '2-1'])"
     >
       <!-- <el-menu-item index="1">
         <el-icon><document /></el-icon>
@@ -24,17 +24,21 @@
           <el-menu-item
             v-for="(eachSearchWordObject, index) in data[titleIndex]"
             :key="index"
-            :index="`1-${index + 1}-${index + 1}`"
+            :index="`1-${index + 1}-${titleIndex + 1}`"
           >
-            <div :key="index" class="grid grid-cols-8 place-items-center gap-5">
-              <div class="col-span-4">
+            <div
+              :key="index"
+              class="grid grid-cols-10 place-items-center gap-6"
+            >
+              <div class="col-span-3">
                 <p>{{ eachSearchWordObject.name }}</p>
               </div>
-
-              <el-button class="col-span-2" type="primary" size="small"
-                >搜尋</el-button
-              >
-              <el-button class="col-span-2" size="small">刪除</el-button>
+              <div class="grid grid-cols-10 place-items-center col-span-7">
+                <el-button class="col-span-5" type="primary" size="small"
+                  >搜尋</el-button
+                >
+                <el-button class="col-span-5" size="small">刪除</el-button>
+              </div>
             </div>
           </el-menu-item>
           <!-- <el-menu-item index="1-1-2">
@@ -101,13 +105,13 @@ export default {
     ]);
     provide("titles", titles);
     const handleOpen = (key, keyPath) => {
-      console.log(key, keyPath);
+
     };
     const handleClose = (key, keyPath) => {
-      console.log(key, keyPath);
+      
     };
+    
     return {
-      handleOpen,
       handleClose,
       RouterLink,
       titles,
@@ -115,7 +119,7 @@ export default {
       open,
       // handleNewData,
       // deleteData,
-      handleopen,
+      handleOpen,
       // handleSelect,
       // clearSelectState,
     };

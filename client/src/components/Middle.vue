@@ -1,5 +1,5 @@
 <template>
-  <div class="flex mt-mt18 ml-2 h-screen ">
+  <div class="flex mt-mt18 ml-2 h-auto ">
  
     <router-view/> 
     <!-- <Left></Left> -->
