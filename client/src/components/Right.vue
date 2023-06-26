@@ -1,19 +1,17 @@
 <template>
-  <div class="ml-custom text-base bg-red-100 pb-2 my-0 max-h-5/6 ">
+  <div class="ml-custom text-base bg-red-100 pb-2 my-0 max-h-5/6">
     <div>
       <div class="pb-3 flex">
         <el-button @click="resetSearchResult()" type="primary">重置</el-button>
         <el-button @click="handleAddNewData()" type="primary">新增</el-button>
-        <el-button @click="exportFile()" type="primary"
-          >Export</el-button
-        >
+        <el-button @click="exportFile()" type="primary">Export</el-button>
       </div>
     </div>
     <el-table
       highlight-current-row
       stripe
       :data="mainContentData"
-      style="height:80vh; width: 80vw"
+      style="height: 80vh; width: 80vw"
     >
       <el-table-column :key="'姓名'" label="姓名" prop="姓名" width="120" fixed>
         <template #default="{ row, $index }">
@@ -126,12 +124,34 @@ export default {
       }
       // console.log(editMode.value);
     };
-    const exportFile = () => {
-      const ws = utils.json_to_sheet(mainContentData.value);
-      const wb = utils.book_new();
-      utils.book_append_sheet(wb, ws, "Data");
-      writeFileXLSX(wb, `會員資料_${new Date().toLocaleString()}.xlsx`);
-    };
+    // const exportFile = () => {
+    //   const ws = utils.json_to_sheet(mainContentData.value);
+    //   const wb = utils.book_new();
+    //   utils.book_append_sheet(wb, ws, "Data");
+    //   writeFileXLSX(wb, `會員資料_${new Date().toLocaleString()}.xlsx`);
+    // };
+   
+
+const exportFile = () => {
+  console.log(mainContentData.value)
+  let deleteM_idData = mainContentData.value.map(({m_id,...rest})=>rest)
+  const ws = utils.json_to_sheet(deleteM_idData);
+  const wb = utils.book_new();
+  utils.book_append_sheet(wb, ws, "Data");
+  
+  const columnCount = utils.sheet_to_json(ws, { header: 1 })[0].length;
+  
+  for (let col = 0; col < columnCount; col++) {
+    const columnName = utils.encode_col(col);
+    const columnWidth = 30;
+    ws["!cols"] = ws["!cols"] || [];
+    ws["!cols"][col] = { wch: columnWidth };
+  }
+  
+  writeFileXLSX(wb, `會員資料_${new Date().toLocaleString()}.xlsx`);
+};
+
+
     onMounted(async () => {
       const mainData = await fetchData();
       mainContentData.value = mainData;
