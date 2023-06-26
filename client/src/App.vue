@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-red-100 overflow-hidden">
+  <div class="bg-red-100 overflow-visible">
     <Top />
     <Middle />
   </div>

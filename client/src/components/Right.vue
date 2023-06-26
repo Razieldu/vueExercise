@@ -1,7 +1,7 @@
 <template>
-  <div class="ml-custom text-base bg-red-100 py-0 my-0 min-h-screen">
+  <div class="ml-custom text-base bg-red-100 pb-2 my-0 max-h-5/6 ">
     <div>
-      <div class="pb-2 flex">
+      <div class="pb-3 flex">
         <el-button @click="resetSearchResult()" type="primary">重置</el-button>
         <el-button @click="handleAddNewData()" type="primary">新增</el-button>
         <el-button @click="exportFile()" type="primary"
@@ -13,7 +13,7 @@
       highlight-current-row
       stripe
       :data="mainContentData"
-      style="height:auto; width: 80vw"
+      style="height:80vh; width: 80vw"
     >
       <el-table-column :key="'姓名'" label="姓名" prop="姓名" width="120" fixed>
         <template #default="{ row, $index }">
