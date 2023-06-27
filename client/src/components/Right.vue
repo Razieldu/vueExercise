@@ -1,5 +1,5 @@
 <template>
-  <div class="ml-custom text-base bg-red-100 pb-2 my-0 max-h-5/6">
+  <div class="ml-custom text-base bg-red-100 py-0 my-0 min-h-[89vh] mt-4">
     <div>
       <div class="pb-3 flex">
         <el-button @click="resetSearchResult()" type="primary">重置</el-button>
@@ -78,7 +78,7 @@
       <div class="example-demonstration">When you have few pages</div>
       <el-pagination layout="prev, pager, next" :total="50" />
     </div> -->
-    <div class="flex justify-center pt-2 pb-1">
+    <div class="flex justify-center pt-4 pb-2">
       <el-pagination
         class="bg-transparent"
         @size-change="handlePageSizeChange"

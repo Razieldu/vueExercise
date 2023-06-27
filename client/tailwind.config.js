@@ -5,7 +5,7 @@ module.exports = {
     extend: {
       spacing: {
         'custom':'19.5rem', // 定义 custom-mt 的尺寸
-        "mt18":"2.5rem"
+        "mt18":"4rem"
       },
     },
   },

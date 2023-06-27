@@ -31,6 +31,28 @@ export const useRightDataStore = defineStore("rightData", {
         console.log(error);
       }
     },
+    async updateMemberData(memberNewData) {
+      try {
+        const response = await fetch("http://localhost:3000/proxy3", {
+          method: "POST",
+          body: JSON.stringify(memberNewData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+    
+        if (response.ok) {
+          const result = await response.json()
+          console.log(result)
+          return result
+        } else {
+          throw new Error("Request failed.");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    
     searchGoalByColumn(titieValue, value) {
       let searchResult = [];
       let useData = this.isFirst ? this.saveData : this.data;
@@ -72,8 +94,9 @@ export const useRightDataStore = defineStore("rightData", {
       console.log(this.saveData);
     },
 
-    handleUpdateData(row) {
+    async handleUpdateData(row) {
       console.log(row);
+      let objToServer=null
       this.data = this.data.map((one) => {
         if (one.m_id === row.m_id) {
           let updateObj = { ...one, ...row };
@@ -85,11 +108,14 @@ export const useRightDataStore = defineStore("rightData", {
       this.saveData = this.saveData.map((one) => {
         if (one.m_id === row.m_id) {
           let updateObj = { ...one, ...row };
-          console.log(updateObj);
+          objToServer=updateObj
           return updateObj;
         }
         return one;
       });
+      console.log(objToServer,"給後端");
+      let result = await this.updateMemberData(objToServer);
+      console.log(result)
     },
   },
 });
