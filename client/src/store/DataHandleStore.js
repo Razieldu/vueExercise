@@ -7,11 +7,11 @@ export const useRightDataStore = defineStore("rightData", {
     isFirst: true,
   }),
   actions: {
-    async fetchData(data) {
+    async fetchData(getData) {
       try {
         const response = await fetch("http://localhost:3000/proxy", {
           method: "POST",
-          body: JSON.stringify(data),
+          body: JSON.stringify(getData),
           headers: {
             "Content-Type": "application/json",
           },
@@ -21,6 +21,8 @@ export const useRightDataStore = defineStore("rightData", {
           const result = await response.json();
           this.data = JSON.parse(JSON.stringify(result.Data));
           this.saveData = JSON.parse(JSON.stringify(result.Data));
+          // console.log(this.data);
+          // console.log(this.saveData);
           return this.data;
         } else {
           throw new Error("Request failed.");
@@ -59,12 +61,17 @@ export const useRightDataStore = defineStore("rightData", {
       this.saveData = this.saveData.filter((one) => one.m_id !== id);
     },
     handleAddNewData() {
-      const newId = Math.floor(Math.random() * 10000);
+      console.log("添加");
+      const newId = Math.floor(Math.random() * 100000);
       const newObj = { m_id: newId };
-      this.data.splice(0, 0, { ...newObj });
-      this.saveData.splice(0, 0, { ...newObj });
+      // this.data.splice(0, 0, { ...newObj });
+      // this.saveData.splice(0, 0, { ...newObj });
+      this.data = [{ ...newObj }, ...this.data];
+      this.saveData = [{ ...newObj }, ...this.saveData];
+      console.log(this.data);
+      console.log(this.saveData);
     },
-    
+
     handleUpdateData(row) {
       console.log(row);
       this.data = this.data.map((one) => {
@@ -84,16 +91,5 @@ export const useRightDataStore = defineStore("rightData", {
         return one;
       });
     },
-    // handleUpdateData(row) {
-    //   const dataIndex = this.data.findIndex((one) => one.m_id === row.m_id);
-    //   if (dataIndex !== -1) {
-    //     this.data[dataIndex] = { ...this.data[dataIndex], ...row };
-    //   }
-
-    //   const saveDataIndex = this.saveData.findIndex((one) => one.m_id === row.m_id);
-    //   if (saveDataIndex !== -1) {
-    //     this.saveData[saveDataIndex] = { ...this.saveData[saveDataIndex], ...row };
-    //  }
-    // },
   },
 });

@@ -156,7 +156,7 @@ export default {
     // };
 
     const exportFile = () => {
-      console.log(mainContentData.value);
+      // console.log(mainContentData.value);
       let deleteM_idData = mainContentData.value.map(
         ({ m_id, ...rest }) => rest
       );
@@ -204,7 +204,7 @@ export default {
         pageSize.value,
         mainData
       );
-      console.log(mainContentData.value);
+      // console.log(mainContentData.value);
     });
     watch(data, (newData) => (mainContentData.value = newData));
     watch([currentPage, pageSize, data], ([curPage, size, newData]) => {
