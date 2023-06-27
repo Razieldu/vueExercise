@@ -11,7 +11,7 @@
       highlight-current-row
       stripe
       :data="mainContentData"
-      style="height: 80vh; width: 80vw"
+      style="height: 75vh; width: 80vw"
     >
       <el-table-column :key="'姓名'" label="姓名" prop="姓名" width="120" fixed>
         <template #default="{ row, $index }">
@@ -74,6 +74,25 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- <div class="example-pagination-block">
+      <div class="example-demonstration">When you have few pages</div>
+      <el-pagination layout="prev, pager, next" :total="50" />
+    </div> -->
+    <div class="flex justify-center pt-2 pb-1">
+      <el-pagination
+        class="bg-transparent"
+        @size-change="handlePageSizeChange"
+        @current-change="handleCurrentChange"
+        @prev-click="handlePrevClick"
+        @next-click="handleNextClick"
+        :page-sizes="[10, 20, 30, 40]"
+        small
+        layout="sizes, prev, pager, next, jumper"
+        :total="100"
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+      />
+    </div>
   </div>
 </template>
 
@@ -105,8 +124,13 @@ export default {
     const editMode = ref(false);
     const currentEditCell = ref([]);
     const buttonContent = ref("修改");
-    const { fetchData, resetSearchResult, handleRowDelete, handleAddNewData,handleUpdateData } =
-      useRightDataStore();
+    const {
+      fetchData,
+      resetSearchResult,
+      handleRowDelete,
+      handleAddNewData,
+      handleUpdateData,
+    } = useRightDataStore();
     const { data } = storeToRefs(useRightDataStore());
     const handleCellEdit = (colKey, rowIndex) => {
       if (!editMode.value) return;
@@ -130,33 +154,62 @@ export default {
     //   utils.book_append_sheet(wb, ws, "Data");
     //   writeFileXLSX(wb, `會員資料_${new Date().toLocaleString()}.xlsx`);
     // };
-   
 
-const exportFile = () => {
-  console.log(mainContentData.value)
-  let deleteM_idData = mainContentData.value.map(({m_id,...rest})=>rest)
-  const ws = utils.json_to_sheet(deleteM_idData);
-  const wb = utils.book_new();
-  utils.book_append_sheet(wb, ws, "Data");
-  
-  const columnCount = utils.sheet_to_json(ws, { header: 1 })[0].length;
-  
-  for (let col = 0; col < columnCount; col++) {
-    const columnName = utils.encode_col(col);
-    const columnWidth = 30;
-    ws["!cols"] = ws["!cols"] || [];
-    ws["!cols"][col] = { wch: columnWidth };
-  }
-  
-  writeFileXLSX(wb, `會員資料_${new Date().toLocaleString()}.xlsx`);
-};
+    const exportFile = () => {
+      console.log(mainContentData.value);
+      let deleteM_idData = mainContentData.value.map(
+        ({ m_id, ...rest }) => rest
+      );
+      const ws = utils.json_to_sheet(deleteM_idData);
+      const wb = utils.book_new();
+      utils.book_append_sheet(wb, ws, "Data");
 
+      const columnCount = utils.sheet_to_json(ws, { header: 1 })[0].length;
 
+      for (let col = 0; col < columnCount; col++) {
+        const columnName = utils.encode_col(col);
+        const columnWidth = 30;
+        ws["!cols"] = ws["!cols"] || [];
+        ws["!cols"][col] = { wch: columnWidth };
+      }
+
+      writeFileXLSX(wb, `會員資料_${new Date().toLocaleString()}.xlsx`);
+    };
+    const currentPage = ref(1);
+    const pageSize = ref(10);
+    const handlePageSizeChange = (val) => {
+      pageSize.value = val;
+    };
+    const handleCurrentChange = (val) => {
+      currentPage.value = val;
+    };
+    const handlePrevClick = (val) => {
+      console.log(val);
+      currentPage.value = val - 1;
+    };
+    const handleNextClick = (val) => {
+      currentPage.value = val + 1;
+    };
+    const handleShowData = (currentPage, pageSize, data) => {
+      let pageStartIndex = (currentPage - 1) * pageSize;
+      let pageEndIndex = currentPage * pageSize;
+      let showData = data.slice(pageStartIndex, pageEndIndex);
+      return showData;
+    };
     onMounted(async () => {
       const mainData = await fetchData();
-      mainContentData.value = mainData;
+      // mainContentData.value = mainData;
+      mainContentData.value = handleShowData(
+        currentPage.value,
+        pageSize.value,
+        mainData
+      );
+      console.log(mainContentData.value);
     });
     watch(data, (newData) => (mainContentData.value = newData));
+    watch([currentPage, pageSize, data], ([curPage, size, newData]) => {
+      mainContentData.value = handleShowData(curPage, size, newData);
+    });
     return {
       mainContentData,
       contentTitle,
@@ -164,14 +217,29 @@ const exportFile = () => {
       // handleRowEdit,
       handleRowDelete,
       editMode,
-      handleCellEdit,   
+      handleCellEdit,
       handleEditMode,
       handleAddNewData,
       exportFile,
       handleUpdateData,
       currentEditCell,
       buttonContent,
+      handlePageSizeChange,
+      handleCurrentChange,
+      handlePrevClick,
+      handleNextClick,
+      handleShowData,
+      currentPage,
+      pageSize,
     };
   },
 };
 </script>
+<style scoped>
+/* .example-pagination-block + .example-pagination-block {
+  margin-top: 10px;
+}
+.example-pagination-block .example-demonstration {
+  margin-bottom: 16px;
+} */
+</style>
