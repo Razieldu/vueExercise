@@ -40,11 +40,11 @@ export const useRightDataStore = defineStore("rightData", {
             "Content-Type": "application/json",
           },
         });
-    
+
         if (response.ok) {
-          const result = await response.json()
-          console.log(result)
-          return result
+          const result = await response.json();
+          console.log(result);
+          return result;
         } else {
           throw new Error("Request failed.");
         }
@@ -52,7 +52,27 @@ export const useRightDataStore = defineStore("rightData", {
         console.log(error);
       }
     },
-    
+    async addMemberData(memberNewData) {
+      try {
+        const response = await fetch("http://localhost:3000/proxy4", {
+          method: "POST",
+          body: JSON.stringify(memberNewData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log(result);
+          return result.m_id;
+        } else {
+          throw new Error("Request failed.");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     searchGoalByColumn(titieValue, value) {
       let searchResult = [];
       let useData = this.isFirst ? this.saveData : this.data;
@@ -82,21 +102,30 @@ export const useRightDataStore = defineStore("rightData", {
       this.data = this.data.filter((one) => one.m_id !== id);
       this.saveData = this.saveData.filter((one) => one.m_id !== id);
     },
-    handleAddNewData() {
+    async handleAddNewData() {
       console.log("添加");
-      const newId = Math.floor(Math.random() * 100000);
-      const newObj = { m_id: newId };
-      // this.data.splice(0, 0, { ...newObj });
-      // this.saveData.splice(0, 0, { ...newObj });
-      this.data = [{ ...newObj }, ...this.data];
-      this.saveData = [{ ...newObj }, ...this.saveData];
-      console.log(this.data);
-      console.log(this.saveData);
+      const newObj = {}; // 创建一个空对象
+
+      this.data = [{ ...newObj }, ...this.data]; // 在数据列表开头添加新对象
+      this.saveData = [{ ...newObj }, ...this.saveData]; // 在保存数据列表开头添加新对象
+
+      try {
+        const result = await this.addMemberData(newObj); // 发送添加数据的请求
+        console.log(result);
+
+        // 更新第一个对象的m_id属性
+        this.data[0].m_id = result;
+        this.saveData[0].m_id = result;
+        console.log(this.data[0])
+        console.log(this.saveData[0])
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     async handleUpdateData(row) {
       console.log(row);
-      let objToServer=null
+      let objToServer = null;
       this.data = this.data.map((one) => {
         if (one.m_id === row.m_id) {
           let updateObj = { ...one, ...row };
@@ -108,14 +137,14 @@ export const useRightDataStore = defineStore("rightData", {
       this.saveData = this.saveData.map((one) => {
         if (one.m_id === row.m_id) {
           let updateObj = { ...one, ...row };
-          objToServer=updateObj
+          objToServer = updateObj;
           return updateObj;
         }
         return one;
       });
-      console.log(objToServer,"給後端");
+      console.log(objToServer, "給後端");
       let result = await this.updateMemberData(objToServer);
-      console.log(result)
+      console.log(result);
     },
   },
 });

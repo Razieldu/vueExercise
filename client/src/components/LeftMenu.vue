@@ -1,5 +1,5 @@
 <template>
-  <el-aside style="height: 80vh; width: 18%; position: fixed; top: 122px">
+  <el-aside style="height: 100vh; width: 18%; position: fixed; top: 124px;padding-left: 16px;">
     <el-menu
       style="background-color: #f1f5f9; border-color: #f1f5f9"
       unique-opened

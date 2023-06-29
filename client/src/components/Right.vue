@@ -199,6 +199,7 @@ export default {
     onMounted(async () => {
       const mainData = await fetchData();
       // mainContentData.value = mainData;
+      console.log(mainData)
       mainContentData.value = handleShowData(
         currentPage.value,
         pageSize.value,

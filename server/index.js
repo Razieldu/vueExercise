@@ -20,7 +20,6 @@ app.post('/proxy2', (req, res) => {
 app.post('/proxy3', (req, res) => {
   const url = process.env.UPDATE_MEMBER_DATA;
   const updateObject = req.body; // 获取要更新的对象
-  console.log(req.body)
   const updateString = encodeURIComponent(JSON.stringify(updateObject));
   const fullUrl = `${url}?update_string=${updateString}`;
 
@@ -34,6 +33,21 @@ app.post('/proxy3', (req, res) => {
   });
 });
 
+app.post('/proxy4', (req, res) => {
+  const url = process.env.INSERT_MEMBER_DATA;
+  const updateObject = req.body; // 获取要更新的对象
+  const updateString = encodeURIComponent(JSON.stringify(updateObject));
+  const fullUrl = `${url}?insert_string=${updateString}`;
+
+  request.post({ url: fullUrl }, (error, response, body) => {
+    if (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.send(body);
+    }
+  });
+});
 
 
 // 启动服务器
