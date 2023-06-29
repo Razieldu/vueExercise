@@ -1,11 +1,34 @@
 <template>
-  <el-aside style="height: 100vh; width: 18%; position: fixed; top: 124px;padding-left: 16px;">
+  <el-aside
+    style="
+      height: 100vh;
+      width: 18%;
+      position: fixed;
+      top: 124px;
+      padding-left: 16px;
+      min-width: 300px;
+    "
+  >
     <el-menu
       style="background-color: #f1f5f9; border-color: #f1f5f9"
       unique-opened
       @open="handleOpen"
       @close="handleClose"
     >
+      <el-sub-menu index="3">
+        <template #title>
+          <el-icon><document /></el-icon>
+          <span>已儲存的分類資料</span>
+        </template>
+        <el-menu-item
+          v-for="(eachSelectedData, index) in selectedData"
+          :key="index"
+          :id="eachSelectedData.id"
+          @click="showSelectedData(eachSelectedData.id)"
+        >
+          <template #title>{{ eachSelectedData.title }}</template>
+        </el-menu-item>
+      </el-sub-menu>
       <RouterLink to="titleSearch">
         <el-menu-item index="2">
           <el-icon><document /></el-icon>
@@ -113,7 +136,7 @@ export default {
       handleSelect,
       clearSelectState,
     } = leftDataStore;
-    const { searchGoalByColumn } = DataHandleStore;
+    const { searchGoalByColumn,showSelectedData,selectedData } = DataHandleStore;
     const titles = ref([
       { name: "姓名", color: "grey", index: "1-1" },
       { name: "Email", color: "silver", index: "2-1" },
@@ -140,6 +163,8 @@ export default {
       // handleSelect,
       // clearSelectState,
       titleData,
+      selectedData,
+      showSelectedData
     };
   },
 };

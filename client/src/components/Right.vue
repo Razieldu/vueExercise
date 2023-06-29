@@ -4,10 +4,15 @@
       <div class="pb-3 flex">
         <el-button @click="resetSearchResult()" type="primary">重置</el-button>
         <el-button @click="handleAddNewData()" type="primary">新增</el-button>
+        <el-button @click="dialogFormVisible = true" type="primary"
+          >儲存當前資料</el-button
+        >
         <el-button @click="exportFile()" type="primary">Export</el-button>
       </div>
     </div>
+
     <el-table
+      v-loading="loading"
       highlight-current-row
       stripe
       :data="mainContentData"
@@ -93,11 +98,39 @@
         v-model:page-size="pageSize"
       />
     </div>
+    <el-dialog v-model="dialogFormVisible" title="以當前資料建立新分頁標題名稱">
+      <el-form :model="form">
+        <el-form-item label="標題名稱" :label-width="formLabelWidth">
+          <el-input
+            v-model="form.title"
+            autocomplete="off"
+            placeholder="請輸入..."
+          />
+        </el-form-item>
+        <!-- <el-form-item label="Zones" :label-width="formLabelWidth">
+          <el-select v-model="form.region" placeholder="Please select a zone">
+            <el-option label="Zone No.1" value="shanghai" />
+            <el-option label="Zone No.2" value="beijing" />
+          </el-select>
+        </el-form-item> -->
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="handleDialogVisible(false)">取消</el-button>
+          <el-button
+            type="primary"
+            @click="handleSelectedData(form.title, handleDialogVisible,resetTitleInput)"
+          >
+            確認
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, reactive } from "vue";
 import { useRightDataStore } from "../store/DataHandleStore";
 import { storeToRefs } from "pinia";
 import { utils, writeFileXLSX } from "xlsx";
@@ -130,6 +163,7 @@ export default {
       handleRowDelete,
       handleAddNewData,
       handleUpdateData,
+      handleSelectedData,
     } = useRightDataStore();
     const { data } = storeToRefs(useRightDataStore());
     const handleCellEdit = (colKey, rowIndex) => {
@@ -196,16 +230,29 @@ export default {
       let showData = data.slice(pageStartIndex, pageEndIndex);
       return showData;
     };
+    const loading = ref(true);
+
     onMounted(async () => {
       const mainData = await fetchData();
+      loading.value = false;
       // mainContentData.value = mainData;
-      console.log(mainData)
+      console.log(mainData);
       mainContentData.value = handleShowData(
         currentPage.value,
         pageSize.value,
         mainData
       );
-      // console.log(mainContentData.value);
+    });
+    const handleDialogVisible = (ifVisible) => {
+      dialogFormVisible.value = ifVisible;
+    };
+    const resetTitleInput = () => {
+      form.title = "";
+    };
+    const dialogFormVisible = ref(false);
+    const formLabelWidth = "140px";
+    const form = reactive({
+      title: "",
     });
     watch(data, (newData) => (mainContentData.value = newData));
     watch([currentPage, pageSize, data], ([curPage, size, newData]) => {
@@ -232,15 +279,16 @@ export default {
       handleShowData,
       currentPage,
       pageSize,
+      loading,
+      formLabelWidth,
+      dialogFormVisible,
+      form,
+      handleSelectedData,
+      resetTitleInput,
+      handleDialogVisible,
     };
   },
 };
 </script>
 <style scoped>
-/* .example-pagination-block + .example-pagination-block {
-  margin-top: 10px;
-}
-.example-pagination-block .example-demonstration {
-  margin-bottom: 16px;
-} */
 </style>

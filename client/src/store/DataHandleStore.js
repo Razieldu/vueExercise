@@ -5,6 +5,7 @@ export const useRightDataStore = defineStore("rightData", {
     data: [],
     saveData: [],
     isFirst: true,
+    selectedData: [],
   }),
   actions: {
     async fetchData(getData) {
@@ -116,8 +117,8 @@ export const useRightDataStore = defineStore("rightData", {
         // 更新第一个对象的m_id属性
         this.data[0].m_id = result;
         this.saveData[0].m_id = result;
-        console.log(this.data[0])
-        console.log(this.saveData[0])
+        console.log(this.data[0]);
+        console.log(this.saveData[0]);
       } catch (error) {
         console.log(error);
       }
@@ -145,6 +146,23 @@ export const useRightDataStore = defineStore("rightData", {
       console.log(objToServer, "給後端");
       let result = await this.updateMemberData(objToServer);
       console.log(result);
+    },
+    handleSelectedData(title, isDialogVisible,resetInput) {
+      isDialogVisible(false);
+      resetInput()
+      let selectedObject = {
+        title,
+        content: [...this.data],
+        id: `${this.selectedData.length}_${title}`,
+      };
+      this.selectedData.push(selectedObject);
+      console.log(this.selectedData);
+    },
+    showSelectedData(id) {
+      console.log(id)
+      let readyToShowData = this.selectedData.filter((eachSelectedData) => eachSelectedData.id===id);
+      console.log(readyToShowData[0].content)
+      this.data = [...readyToShowData[0].content];
     },
   },
 });
