@@ -15,7 +15,7 @@
       @open="handleOpen"
       @close="handleClose"
     >
-      <el-sub-menu index="3">
+      <el-sub-menu index="2">
         <template #title>
           <el-icon><document /></el-icon>
           <span>已儲存的分類資料</span>
@@ -29,12 +29,12 @@
           <template #title>{{ eachSelectedData.title }}</template>
         </el-menu-item>
       </el-sub-menu>
-      <RouterLink to="titleSearch">
+      <!-- <RouterLink to="titleSearch">
         <el-menu-item index="2">
           <el-icon><document /></el-icon>
           <span>未套版標題搜尋</span>
         </el-menu-item>
-      </RouterLink>
+      </RouterLink> -->
       <el-sub-menu index="1">
         <template #title>
           <el-icon><Search /></el-icon>
@@ -55,56 +55,42 @@
               :key="index"
               class="grid grid-cols-10 place-items-center gap-6"
             >
-              <div class="col-span-3">
+              <div class="col-span-1 flex justify-center ">
+                <el-checkbox
+                  v-model="eachSearchWordObject.select"
+                  label="關聯"
+                  size="small"
+                  v-if="!isFirst.value"
+                />
+              
+              </div>
+              <div class="col-span-4 place-items-center">
                 <p>{{ eachSearchWordObject.name }}</p>
               </div>
-              <div class="grid grid-cols-10 place-items-center col-span-7">
+              <div class="grid grid-cols-10 place-items-center col-span-5">
                 <el-button
                   @click="
                     searchGoalByColumn(
                       titleData[titleIndex].name,
-                      eachSearchWordObject.name
+                      eachSearchWordObject.name,
+                      eachSearchWordObject.select
                     )
                   "
-                  class="col-span-5"
+                  class="col-span-3"
                   type="primary"
                   size="small"
                   >搜尋</el-button
                 >
                 <el-button
                   @click="deleteData(titleIndex, eachSearchWordObject.id)"
-                  class="col-span-5"
+                  class="col-span-7"
                   size="small"
                   >刪除</el-button
                 >
               </div>
             </div>
           </el-menu-item>
-          <!-- <el-menu-item index="1-1-2">
-            <div class="flex items-center">
-              <p class="mr-20">陳</p>
-              <el-button type="primary" size="small">搜尋</el-button>
-              <el-button size="small">刪除</el-button>
-            </div>
-          </el-menu-item> -->
         </el-sub-menu>
-        <!-- <el-sub-menu index="2-1">
-          <template #title>姓名</template>
-          <el-menu-item index="2-1-1">
-            <div class="flex items-center">
-              <p class="mr-20">林</p>
-              <el-button type="primary" size="small">搜尋</el-button>
-              <el-button size="small">刪除</el-button>
-            </div>
-          </el-menu-item>
-          <el-menu-item index="2-1-2">
-            <div class="flex items-center">
-              <p class="mr-20">陳</p>
-              <el-button type="primary" size="small">搜尋</el-button>
-              <el-button size="small">刪除</el-button>
-            </div>
-          </el-menu-item>
-        </el-sub-menu> -->
       </el-sub-menu>
     </el-menu>
   </el-aside>
@@ -118,7 +104,7 @@
 //   Setting,
 // } from "@element-plus/icons-vue";
 import { RouterLink } from "vue-router";
-import { ref, provide, inject } from "vue";
+import { ref, provide, inject} from "vue";
 import { useLeftDataStore } from "../store/LeftDataHandleStore";
 import { useRightDataStore } from "../store/DataHandleStore";
 import { storeToRefs } from "pinia";
@@ -136,7 +122,8 @@ export default {
       handleSelect,
       clearSelectState,
     } = leftDataStore;
-    const { searchGoalByColumn,showSelectedData,selectedData } = DataHandleStore;
+    const { searchGoalByColumn, showSelectedData, selectedData,isFirst } =
+      DataHandleStore;
     const titles = ref([
       { name: "姓名", color: "grey", index: "1-1" },
       { name: "Email", color: "silver", index: "2-1" },
@@ -149,7 +136,7 @@ export default {
     // provide("titles", titles);
     const handleOpen = (key, keyPath) => {};
     const handleClose = (key, keyPath) => {};
-
+    // watch(data, (newData) => (data.value = newData));
     return {
       handleClose,
       RouterLink,
@@ -164,7 +151,8 @@ export default {
       // clearSelectState,
       titleData,
       selectedData,
-      showSelectedData
+      showSelectedData,
+      isFirst
     };
   },
 };

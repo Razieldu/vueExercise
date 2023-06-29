@@ -182,13 +182,6 @@ export default {
       }
       // console.log(editMode.value);
     };
-    // const exportFile = () => {
-    //   const ws = utils.json_to_sheet(mainContentData.value);
-    //   const wb = utils.book_new();
-    //   utils.book_append_sheet(wb, ws, "Data");
-    //   writeFileXLSX(wb, `會員資料_${new Date().toLocaleString()}.xlsx`);
-    // };
-
     const exportFile = () => {
       // console.log(mainContentData.value);
       let deleteM_idData = mainContentData.value.map(

@@ -1,10 +1,13 @@
 import { defineStore } from "pinia";
+import { reactive } from "vue";
+import { useLeftDataStore } from "./LeftDataHandleStore";
 
 export const useRightDataStore = defineStore("rightData", {
   state: () => ({
     data: [],
     saveData: [],
-    isFirst: true,
+    isFirst: reactive({ value: true }),
+
     selectedData: [],
   }),
   actions: {
@@ -74,30 +77,59 @@ export const useRightDataStore = defineStore("rightData", {
         console.log(error);
       }
     },
-    searchGoalByColumn(titieValue, value) {
-      let searchResult = [];
-      let useData = this.isFirst ? this.saveData : this.data;
-      // console.log(useData["0"])
-      let keyWord = new RegExp(value);
-      for (let indexNum in useData) {
-        for (let key in useData[indexNum]) {
-          if (key !== titieValue) continue;
-          let target = useData[indexNum][key];
-          if (keyWord.test(target) === true) {
-            searchResult.push(useData[indexNum]);
+    searchGoalByColumn(titieValue, value, ifRelated) {
+      if (!ifRelated) {
+        let searchResult = [];
+        let useData = this.isFirst.value ? this.saveData : this.data;
+        // console.log(useData["0"])
+        let keyWord = new RegExp(value);
+        for (let indexNum in useData) {
+          for (let key in useData[indexNum]) {
+            if (key !== titieValue) continue;
+            let target = useData[indexNum][key];
+            if (keyWord.test(target) === true) {
+              searchResult.push(useData[indexNum]);
+            }
           }
         }
+        // console.log(searchResult);
+        searchResult.length > 0 ? (this.data = searchResult) : null;
+        // console.log(this.data);
+        this.isFirst.value = false;
+        console.log(this.isFirst.value);
+      } else if (ifRelated && !this.first) {
+        let searchResult = [];
+        let useData = [...this.saveData];
+        let keyWord = new RegExp(value);
+        for (let indexNum in useData) {
+          for (let key in useData[indexNum]) {
+            if (key !== titieValue) continue;
+            let target = useData[indexNum][key];
+            if (keyWord.test(target) === true) {
+              if (
+                !this.data.some((one) => one.m_id === useData[indexNum].m_id)
+              ) {
+                // console.log(one)
+                searchResult.push(useData[indexNum]);
+                // console.log(searchResult)
+              }
+            }
+          }
+        }
+        this.data = [...this.data, ...searchResult];
+        this.isFirst.value = false;
+        console.log(this.isFirst.value);
       }
-      console.log(searchResult);
-      searchResult.length > 0 ? (this.data = searchResult) : null;
-      console.log(this.data);
-      this.isFirst = false;
       // console.log(`篩選後更新資料${[...gridData]}`);
     },
     resetSearchResult() {
+      const leftDataStore = useLeftDataStore();
+      const { clearSelectState } = leftDataStore;
       this.data = [...this.saveData];
-      console.log(this.data, "THIS.DATA");
-      console.log(this.saveData, "SAVEDATA");
+      this.isFirst.value = true;
+      clearSelectState();
+      // console.log(this.data, "THIS.DATA");
+      // console.log(this.saveData, "SAVEDATA");
     },
     handleRowDelete(id) {
       this.data = this.data.filter((one) => one.m_id !== id);
@@ -147,21 +179,20 @@ export const useRightDataStore = defineStore("rightData", {
       let result = await this.updateMemberData(objToServer);
       console.log(result);
     },
-    handleSelectedData(title, isDialogVisible,resetInput) {
+    handleSelectedData(title, isDialogVisible, resetInput) {
       isDialogVisible(false);
-      resetInput()
+      resetInput();
       let selectedObject = {
         title,
         content: [...this.data],
         id: `${this.selectedData.length}_${title}`,
       };
       this.selectedData.push(selectedObject);
-      console.log(this.selectedData);
     },
     showSelectedData(id) {
-      console.log(id)
-      let readyToShowData = this.selectedData.filter((eachSelectedData) => eachSelectedData.id===id);
-      console.log(readyToShowData[0].content)
+      let readyToShowData = this.selectedData.filter(
+        (eachSelectedData) => eachSelectedData.id === id
+      );
       this.data = [...readyToShowData[0].content];
     },
   },

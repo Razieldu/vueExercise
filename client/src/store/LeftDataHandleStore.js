@@ -69,7 +69,6 @@ export const useLeftDataStore = defineStore("leftData", {
         });
       });
     },
-
     clearSelectState() {
       this.data.forEach((subArray) => {
         subArray.forEach((item) => {
