@@ -1,5 +1,5 @@
 <template>
-  <div class="flex mt-mt18 ml-2 pb-0 ">
+  <div class=" relative flex mt-mt18 max-h-[624px]  ">
  
     <router-view/> 
     <!-- <Left></Left> -->

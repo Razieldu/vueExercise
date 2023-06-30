@@ -1,14 +1,18 @@
 <template>
+  <div class=" relative bg-red-200 h-screen">
+
+
   <el-aside
     style="
-      height: 100vh;
+      height: 70vh;
       width: 18%;
       position: fixed;
-      top: 124px;
-      padding-left: 4px;
+      top: 112px;
+      padding-left: 10px;
       min-width: 300px;
     "
   >
+  <el-scrollbar>
     <el-menu
       style="background-color: #f1f5f9; border-color: #f1f5f9"
       unique-opened
@@ -61,7 +65,8 @@
                 />
               </div>
               <div
-                class="col-span-6 place-items-center"
+              :ref="el => (myElements[`${titleIndex}-${index}`] = el)"
+                class="col-span-6  flex justify-center overflow-hidden min-w-[60%] max-w-[60%] hover:bg-red-100  "
                 @click="
                   searchGoalByColumn(
                     titleData[titleIndex].name,
@@ -74,21 +79,18 @@
                   {{ eachSearchWordObject.name }}
                 </p>
               </div>
-              <div class="col-span-1 place-items-center flex justify-end">
-                <el-icon
-                  class="customCheckbox"
-                  @click="deleteData(titleIndex, eachSearchWordObject.id)"
-                  type="primary"
-                  size="small"
-                  ><Delete
-                /></el-icon>
+              <div class="deleteButton col-span-1 place-items-center flex justify-center">
+                <el-button type="danger" :icon="Delete" size="small" circle  @click="deleteData(titleIndex, eachSearchWordObject.id)"/>
               </div>
             </div>
           </el-menu-item>
         </el-sub-menu>
       </el-sub-menu>
     </el-menu>
+  </el-scrollbar>
   </el-aside>
+
+</div>
 </template>
   
 <script>
@@ -100,7 +102,7 @@
 // } from "@element-plus/icons-vue";
 import { Delete, Edit, Search, Share, Upload } from "@element-plus/icons-vue";
 import { RouterLink } from "vue-router";
-import { ref, provide, inject } from "vue";
+import { ref, provide, inject, onMounted,nextTick,watchEffect  } from "vue";
 import { useLeftDataStore } from "../store/LeftDataHandleStore";
 import { useRightDataStore } from "../store/DataHandleStore";
 import { storeToRefs } from "pinia";
@@ -132,7 +134,24 @@ export default {
     // provide("titles", titles);
     const handleOpen = (key, keyPath) => {};
     const handleClose = (key, keyPath) => {};
-    // watch(data, (newData) => (data.value = newData));
+    const myElements = ref({});
+ 
+    onMounted(async () => {
+  await nextTick();
+  setTimeout(() => {
+    Object.values(myElements.value).forEach((el) => {
+      // console.log(el.offsetWidth);
+      // console.log(el.clientWidth);
+      // console.log(el.getBoundingClientRect().width);
+      console.log(el)
+      if (el?.offsetWidth < el?.scrollWidth) {
+        el.classList.add("justify-start");
+      }
+    });
+  }, 1000); // 1秒後執行
+});
+
+
     return {
       handleClose,
       RouterLink,
@@ -150,13 +169,17 @@ export default {
       showSelectedData,
       isFirst,
       Delete,
+      myElements
     };
   },
 };
 </script>
 <style scope>
-.el-icon svg {
-  height: 0.7rem !important;
-  width: 0.7rem !important;
+.deleteButton .el-icon svg {
+  height: 0.8rem !important;
+  width: 0.8rem !important;
+}
+.deleteButton .el-icon{
+  margin-right: 0px !important
 }
 </style>

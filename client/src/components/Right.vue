@@ -1,7 +1,7 @@
 <template>
-  <div class="ml-custom text-base bg-red-100 py-0 my-0 min-h-[89vh] mt-4">
+  <div class="ml-custom text-base bg-red-100 py-0 fixed">
     <div>
-      <div class="pb-3 flex">
+      <div class="pl-1 py-2 flex">
         <el-button @click="resetSearchResult()" type="primary">重置</el-button>
         <el-button @click="handleAddNewData()" type="primary">新增</el-button>
         <el-button @click="dialogFormVisible = true" type="primary"
@@ -16,7 +16,7 @@
       highlight-current-row
       stripe
       :data="mainContentData"
-      style="height: 75vh; width: 80vw"
+      style="height: 76vh; width: 80vw"
     >
       <el-table-column :key="'姓名'" label="姓名" prop="姓名" width="120" fixed>
         <template #default="{ row, $index }">
@@ -79,7 +79,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="flex justify-center pt-4 pb-2">
+    <div class="flex justify-center pt-3 pb-1">
       <el-pagination
         class="bg-transparent"
         @size-change="handlePageSizeChange"

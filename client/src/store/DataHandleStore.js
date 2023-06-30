@@ -180,6 +180,7 @@ export const useRightDataStore = defineStore("rightData", {
       console.log(result);
     },
     handleSelectedData(title, isDialogVisible, resetInput) {
+      if(title==="") return
       isDialogVisible(false);
       resetInput();
       let selectedObject = {
