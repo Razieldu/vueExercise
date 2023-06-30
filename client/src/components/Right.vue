@@ -79,10 +79,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- <div class="example-pagination-block">
-      <div class="example-demonstration">When you have few pages</div>
-      <el-pagination layout="prev, pager, next" :total="50" />
-    </div> -->
     <div class="flex justify-center pt-4 pb-2">
       <el-pagination
         class="bg-transparent"
@@ -98,7 +94,11 @@
         v-model:page-size="pageSize"
       />
     </div>
-    <el-dialog v-model="dialogFormVisible" title="以當前資料建立新分頁標題名稱">
+    <el-dialog
+      class="fixed top-20"
+      v-model="dialogFormVisible"
+      title="建立新分頁標題名稱"
+    >
       <el-form :model="form">
         <el-form-item label="標題名稱" :label-width="formLabelWidth">
           <el-input
@@ -107,19 +107,19 @@
             placeholder="請輸入..."
           />
         </el-form-item>
-        <!-- <el-form-item label="Zones" :label-width="formLabelWidth">
-          <el-select v-model="form.region" placeholder="Please select a zone">
-            <el-option label="Zone No.1" value="shanghai" />
-            <el-option label="Zone No.2" value="beijing" />
-          </el-select>
-        </el-form-item> -->
       </el-form>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="handleDialogVisible(false)">取消</el-button>
           <el-button
             type="primary"
-            @click="handleSelectedData(form.title, handleDialogVisible,resetTitleInput)"
+            @click="
+              handleSelectedData(
+                form.title,
+                handleDialogVisible,
+                resetTitleInput
+              )
+            "
           >
             確認
           </el-button>

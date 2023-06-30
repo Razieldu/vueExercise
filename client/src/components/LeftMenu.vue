@@ -5,7 +5,7 @@
       width: 18%;
       position: fixed;
       top: 124px;
-      padding-left: 16px;
+      padding-left: 4px;
       min-width: 300px;
     "
   >
@@ -51,42 +51,37 @@
             :key="index"
             :index="`1-${index + 1}-${titleIndex + 1}`"
           >
-            <div
-              :key="index"
-              class="grid grid-cols-10 place-items-center gap-6"
-            >
-              <div class="col-span-1 flex justify-center ">
+            <div :key="index" class="grid grid-cols-10 place-items-center">
+              <div class="col-span-3 flex justify-center">
                 <el-checkbox
                   v-model="eachSearchWordObject.select"
                   label="關聯"
                   size="small"
                   v-if="!isFirst.value"
                 />
-              
               </div>
-              <div class="col-span-4 place-items-center">
-                <p>{{ eachSearchWordObject.name }}</p>
+              <div
+                class="col-span-6 place-items-center"
+                @click="
+                  searchGoalByColumn(
+                    titleData[titleIndex].name,
+                    eachSearchWordObject.name,
+                    eachSearchWordObject.select
+                  )
+                "
+              >
+                <p class="text-s">
+                  {{ eachSearchWordObject.name }}
+                </p>
               </div>
-              <div class="grid grid-cols-10 place-items-center col-span-5">
-                <el-button
-                  @click="
-                    searchGoalByColumn(
-                      titleData[titleIndex].name,
-                      eachSearchWordObject.name,
-                      eachSearchWordObject.select
-                    )
-                  "
-                  class="col-span-3"
+              <div class="col-span-1 place-items-center flex justify-end">
+                <el-icon
+                  class="customCheckbox"
+                  @click="deleteData(titleIndex, eachSearchWordObject.id)"
                   type="primary"
                   size="small"
-                  >搜尋</el-button
-                >
-                <el-button
-                  @click="deleteData(titleIndex, eachSearchWordObject.id)"
-                  class="col-span-7"
-                  size="small"
-                  >刪除</el-button
-                >
+                  ><Delete
+                /></el-icon>
               </div>
             </div>
           </el-menu-item>
@@ -103,8 +98,9 @@
 //   Location,
 //   Setting,
 // } from "@element-plus/icons-vue";
+import { Delete, Edit, Search, Share, Upload } from "@element-plus/icons-vue";
 import { RouterLink } from "vue-router";
-import { ref, provide, inject} from "vue";
+import { ref, provide, inject } from "vue";
 import { useLeftDataStore } from "../store/LeftDataHandleStore";
 import { useRightDataStore } from "../store/DataHandleStore";
 import { storeToRefs } from "pinia";
@@ -122,7 +118,7 @@ export default {
       handleSelect,
       clearSelectState,
     } = leftDataStore;
-    const { searchGoalByColumn, showSelectedData, selectedData,isFirst } =
+    const { searchGoalByColumn, showSelectedData, selectedData, isFirst } =
       DataHandleStore;
     const titles = ref([
       { name: "姓名", color: "grey", index: "1-1" },
@@ -152,8 +148,15 @@ export default {
       titleData,
       selectedData,
       showSelectedData,
-      isFirst
+      isFirst,
+      Delete,
     };
   },
 };
 </script>
+<style scope>
+.el-icon svg {
+  height: 0.7rem !important;
+  width: 0.7rem !important;
+}
+</style>

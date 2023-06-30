@@ -4,7 +4,7 @@
   >
     <div class="ml-10 flex items-center gap-0">
       <el-input placeholder="請輸入..." />
-      <el-button class="ml-2" type="primary">搜尋</el-button>
+      <el-button class="ml-3" type="primary">搜尋</el-button>
       <div class="absolute right-5">
         <el-button type="primary">登出</el-button>
       </div>
