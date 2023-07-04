@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import { reactive } from "vue";
+import { reactive} from "vue";
 import { useLeftDataStore } from "./LeftDataHandleStore";
-
+import Fuse from "fuse.js";
 export const useRightDataStore = defineStore("rightData", {
   state: () => ({
     data: [],
@@ -183,7 +183,7 @@ export const useRightDataStore = defineStore("rightData", {
       if(title==="") return
       isDialogVisible(false);
       resetInput();
-      let selectedObject = {
+        let selectedObject = {
         title,
         content: [...this.data],
         id: `${this.selectedData.length}_${title}`,
@@ -191,10 +191,21 @@ export const useRightDataStore = defineStore("rightData", {
       this.selectedData.push(selectedObject);
     },
     showSelectedData(id) {
+      this.isFirst.value = false;
       let readyToShowData = this.selectedData.filter(
         (eachSelectedData) => eachSelectedData.id === id
       );
       this.data = [...readyToShowData[0].content];
     },
+    fuzzySearch(value){
+      const options = {
+      keys: ["姓名","Email","服務單位","職稱","郵遞區號","地址","郵遞區號2","地址2","連絡電話_公司","連絡電話_秘書","連絡電話_住宅","連絡電話_手機","連絡電話1","連絡電話2","傳真電話","傳真2"],
+    };
+    const products = [...this.data]
+    const fuse = new Fuse(products, options);
+    const result =fuse.search(value)
+    let useData = result.map(one=>one.item)
+    this.data =[...useData]
+  }
   },
 });

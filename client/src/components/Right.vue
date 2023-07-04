@@ -247,6 +247,7 @@ export default {
     const form = reactive({
       title: "",
     });
+
     watch(data, (newData) => (mainContentData.value = newData));
     watch([currentPage, pageSize, data], ([curPage, size, newData]) => {
       mainContentData.value = handleShowData(curPage, size, newData);

@@ -4,7 +4,7 @@ export const useLeftDataStore = defineStore("leftData", {
   state: () => ({
     data: [
       [
-        { id: "01", name: "劉11111111111111111111111111111111111111111111111111111111111111111111111111111111111111", select: false },
+        { id: "01", name: "劉", select: false },
         { id: "02", name: "陳", select: false },
         { id: "03", name: "林", select: false },
       ],
