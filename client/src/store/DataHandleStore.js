@@ -191,6 +191,7 @@ export const useRightDataStore = defineStore("rightData", {
       this.selectedData.push(selectedObject);
     },
     showSelectedData(id) {
+      console.log(id)
       this.isFirst.value = false;
       let readyToShowData = this.selectedData.filter(
         (eachSelectedData) => eachSelectedData.id === id

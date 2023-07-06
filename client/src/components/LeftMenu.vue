@@ -29,6 +29,7 @@
           :key="index"
           :id="eachSelectedData.id"
           @click="showSelectedData(eachSelectedData.id)"
+          :index="`2-${index+1}`"
         >
           <template #title>{{ eachSelectedData.title }}</template>
         </el-menu-item>
@@ -124,11 +125,11 @@ export default {
       DataHandleStore;
     const titles = ref([
       { name: "姓名", color: "grey", index: "1-1" },
-      { name: "Email", color: "silver", index: "2-1" },
-      { name: "服務單位", color: "grey", index: "3-1" },
-      { name: "職稱", color: "silver", index: "4-1" },
-      { name: "郵遞區號", color: "grey", index: "5-1" },
-      { name: "地址", color: "silver", index: "6-1" },
+      { name: "Email", color: "silver", index: "1-2" },
+      { name: "服務單位", color: "grey", index: "1-3" },
+      { name: "職稱", color: "silver", index: "1-4" },
+      { name: "郵遞區號", color: "grey", index: "1-5" },
+      { name: "地址", color: "silver", index: "1-6" },
     ]);
     const titleData = titles.value;
     // provide("titles", titles);
@@ -136,20 +137,20 @@ export default {
     const handleClose = (key, keyPath) => {};
     const myElements = ref({});
  
-    onMounted(async () => {
-  await nextTick();
-  setTimeout(() => {
-    Object.values(myElements.value).forEach((el) => {
-      // console.log(el.offsetWidth);
-      // console.log(el.clientWidth);
-      // console.log(el.getBoundingClientRect().width);
-      console.log(el)
-      if (el?.offsetWidth < el?.scrollWidth) {
-        el.classList.add("justify-start");
-      }
-    });
-  }, 1000); // 1秒後執行
-});
+//     onMounted(async () => {
+//   await nextTick();
+//   setTimeout(() => {
+//     Object.values(myElements.value).forEach((el) => {
+//       // console.log(el.offsetWidth);
+//       // console.log(el.clientWidth);
+//       // console.log(el.getBoundingClientRect().width);
+//       console.log(el)
+//       if (el?.offsetWidth < el?.scrollWidth) {
+//         el.classList.add("justify-start");
+//       }
+//     });
+//   }, 1000); // 1秒後執行
+// });
 
 
     return {

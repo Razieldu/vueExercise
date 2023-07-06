@@ -45,6 +45,7 @@ export const useLeftDataStore = defineStore("leftData", {
     },
 
     deleteData(index, id) {
+      console.log(index,id)
       this.data[index] = this.data[index].filter((item) => item.id !== id);
     },
 
