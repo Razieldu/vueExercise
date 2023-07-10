@@ -62,7 +62,7 @@
                   v-model="eachSearchWordObject.select"
                   label="關聯"
                   size="small"
-                  v-if="!isFirst.value"
+                  v-if="!isFirst"
                 />
               </div>
               <div
@@ -103,7 +103,7 @@
 // } from "@element-plus/icons-vue";
 import { Delete, Edit, Search, Share, Upload } from "@element-plus/icons-vue";
 import { RouterLink } from "vue-router";
-import { ref, provide, inject, onMounted,nextTick,watchEffect  } from "vue";
+import { ref, provide, inject, onMounted,nextTick,watch  } from "vue";
 import { useLeftDataStore } from "../store/LeftDataHandleStore";
 import { useRightDataStore } from "../store/DataHandleStore";
 import { storeToRefs } from "pinia";
@@ -121,8 +121,9 @@ export default {
       handleSelect,
       clearSelectState,
     } = leftDataStore;
-    const { searchGoalByColumn, showSelectedData, selectedData, isFirst } =
+    const { searchGoalByColumn, showSelectedData } =
       DataHandleStore;
+    const { selectedData, isFirst } = storeToRefs(DataHandleStore);
     const titles = ref([
       { name: "姓名", color: "grey", index: "1-1" },
       { name: "Email", color: "silver", index: "1-2" },
@@ -136,7 +137,10 @@ export default {
     const handleOpen = (key, keyPath) => {};
     const handleClose = (key, keyPath) => {};
     const myElements = ref({});
- 
+    watch(selectedData, (newData) => { 
+  console.log("選單資料更新發動", newData)
+  console.log("選單資料更新發動", selectedData)
+},{ deep: true });
 //     onMounted(async () => {
 //   await nextTick();
 //   setTimeout(() => {
@@ -170,8 +174,8 @@ export default {
       showSelectedData,
       isFirst,
       Delete,
-      myElements
-    };
+      myElements,
+      };
   },
 };
 </script>

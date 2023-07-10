@@ -2,12 +2,12 @@
   <div class="ml-custom text-base bg-red-100 py-0 fixed">
     <div>
       <div class="pl-1 py-2 flex">
-        <el-button @click="resetSearchResult()" type="primary">重置</el-button>
+        <el-button @click="resetSearchResult()" type="primary">主資料頁面</el-button>
         <el-button @click="handleAddNewData()" type="primary">新增</el-button>
-        <el-button @click="dialogFormVisible = true" type="primary"
-          >儲存當前資料</el-button
-        >
         <el-button @click="exportFile()" type="primary">Export</el-button>
+        <el-button @click="dialogAddFormVisible = true" type="primary">建立資料分頁</el-button
+        >
+        <el-button v-if="currentSelectedDataId!==''" @click="dialogUpdateFormVisible = true" type="primary">更新資料分頁</el-button>
       </div>
     </div>
 
@@ -39,6 +39,7 @@
         </template>
       </el-table-column>
       <el-table-column
+     
         v-for="eachObj in contentTitle"
         :key="eachObj.key"
         :label="eachObj.title"
@@ -96,7 +97,7 @@
     </div>
     <el-dialog
       class="fixed top-20"
-      v-model="dialogFormVisible"
+      v-model="dialogAddFormVisible"
       title="建立新分頁標題名稱"
     >
       <el-form :model="form">
@@ -107,20 +108,43 @@
             placeholder="請輸入..."
           />
         </el-form-item>
-      </el-form>
+         </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="handleDialogVisible(false)">取消</el-button>
+          <el-button @click="handleAddDialogVisible(false)">取消</el-button>
           <el-button
             type="primary"
             @click="
               handleSelectedData(
                 form.title,
-                handleDialogVisible,
+                handleAddDialogVisible,
                 resetTitleInput
               )
             "
           >
+            確認
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <el-dialog
+      v-if="currentSelectedDataId!==''"
+      class="fixed top-20"
+      v-model="dialogUpdateFormVisible"
+      title="更新目前分頁"
+    >
+      <el-form :model="form">
+        <el-form-item label="標題名稱" :label-width="formLabelWidth">
+          <el-input
+          v-model="currentSelectedData.title"
+            autocomplete="off"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="handleUpdateDialogVisible(false)">取消</el-button>
+          <el-button  @click="updateSelectedData(currentSelectedDataId,handleUpdateDialogVisible,currentSelectedData.title)" >
             確認
           </el-button>
         </span>
@@ -164,12 +188,13 @@ export default {
       handleAddNewData,
       handleUpdateData,
       handleSelectedData,
+      updateSelectedData
     } = useRightDataStore();
-    const { data } = storeToRefs(useRightDataStore());
+    const { data,currentSelectedDataId,currentSelectedData} = storeToRefs(useRightDataStore());
     const handleCellEdit = (colKey, rowIndex) => {
       if (!editMode.value) return;
       currentEditCell.value = [colKey, rowIndex];
-      console.log(currentEditCell.value);
+      // console.log(currentEditCell.value);
     };
     const handleEditMode = () => {
       let oldValue = editMode.value;
@@ -211,7 +236,7 @@ export default {
       currentPage.value = val;
     };
     const handlePrevClick = (val) => {
-      console.log(val);
+      // console.log(val);
       currentPage.value = val - 1;
     };
     const handleNextClick = (val) => {
@@ -229,20 +254,25 @@ export default {
       const mainData = await fetchData();
       loading.value = false;
       // mainContentData.value = mainData;
-      console.log(mainData);
+      // console.log(mainData);
       mainContentData.value = handleShowData(
         currentPage.value,
         pageSize.value,
         mainData
       );
     });
-    const handleDialogVisible = (ifVisible) => {
-      dialogFormVisible.value = ifVisible;
+    const dialogAddFormVisible = ref(false);
+    const handleAddDialogVisible = (ifVisible) => {
+      dialogAddFormVisible.value = ifVisible;
+    };
+    const dialogUpdateFormVisible = ref(false);
+    const handleUpdateDialogVisible = (ifVisible) => {
+      dialogUpdateFormVisible.value = ifVisible;
     };
     const resetTitleInput = () => {
       form.title = "";
     };
-    const dialogFormVisible = ref(false);
+
     const formLabelWidth = "140px";
     const form = reactive({
       title: "",
@@ -275,11 +305,16 @@ export default {
       pageSize,
       loading,
       formLabelWidth,
-      dialogFormVisible,
+      dialogAddFormVisible,
+      dialogUpdateFormVisible,
       form,
       handleSelectedData,
       resetTitleInput,
-      handleDialogVisible,
+      handleAddDialogVisible,
+      handleUpdateDialogVisible,
+      currentSelectedDataId,
+      updateSelectedData,
+      currentSelectedData
     };
   },
 };

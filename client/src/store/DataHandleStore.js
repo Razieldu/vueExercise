@@ -1,13 +1,14 @@
 import { defineStore } from "pinia";
-import { reactive} from "vue";
+import { reactive } from "vue";
 import { useLeftDataStore } from "./LeftDataHandleStore";
 import Fuse from "fuse.js";
 export const useRightDataStore = defineStore("rightData", {
   state: () => ({
     data: [],
     saveData: [],
-    isFirst: reactive({ value: true }),
-
+    isFirst: true,
+    currentSelectedDataId: "",
+    currentSelectedData: [],
     selectedData: [],
   }),
   actions: {
@@ -80,7 +81,7 @@ export const useRightDataStore = defineStore("rightData", {
     searchGoalByColumn(titieValue, value, ifRelated) {
       if (!ifRelated) {
         let searchResult = [];
-        let useData = this.isFirst.value ? this.saveData : this.data;
+        let useData = this.isFirst ? this.saveData : this.data;
         // console.log(useData["0"])
         let keyWord = new RegExp(value);
         for (let indexNum in useData) {
@@ -95,9 +96,9 @@ export const useRightDataStore = defineStore("rightData", {
         // console.log(searchResult);
         searchResult.length > 0 ? (this.data = searchResult) : null;
         // console.log(this.data);
-        this.isFirst.value = false;
-        console.log(this.isFirst.value);
-      } else if (ifRelated && !this.first) {
+        this.isFirst = false;
+        // console.log(this.isFirst);
+      } else if (ifRelated && !this.isFirst) {
         let searchResult = [];
         let useData = [...this.saveData];
         let keyWord = new RegExp(value);
@@ -117,8 +118,8 @@ export const useRightDataStore = defineStore("rightData", {
           }
         }
         this.data = [...this.data, ...searchResult];
-        this.isFirst.value = false;
-        console.log(this.isFirst.value);
+        this.isFirst = false;
+        console.log(this.isFirst);
       }
       // console.log(`篩選後更新資料${[...gridData]}`);
     },
@@ -126,7 +127,8 @@ export const useRightDataStore = defineStore("rightData", {
       const leftDataStore = useLeftDataStore();
       const { clearSelectState } = leftDataStore;
       this.data = [...this.saveData];
-      this.isFirst.value = true;
+      this.isFirst = true;
+      this.currentSelectedDataId = "";
       clearSelectState();
       // console.log(this.data, "THIS.DATA");
       // console.log(this.saveData, "SAVEDATA");
@@ -180,33 +182,65 @@ export const useRightDataStore = defineStore("rightData", {
       console.log(result);
     },
     handleSelectedData(title, isDialogVisible, resetInput) {
-      if(title==="") return
+      if (title === "") return;
       isDialogVisible(false);
       resetInput();
-        let selectedObject = {
+      let newId = Math.floor(100000*Math.random())
+      let selectedObject = {
         title,
         content: [...this.data],
-        id: `${this.selectedData.length}_${title}`,
+        id: `${newId}_${title}`,
       };
       this.selectedData.push(selectedObject);
     },
     showSelectedData(id) {
-      console.log(id)
-      this.isFirst.value = false;
+      // console.log(id);
+      this.isFirst = false;
       let readyToShowData = this.selectedData.filter(
         (eachSelectedData) => eachSelectedData.id === id
       );
       this.data = [...readyToShowData[0].content];
+      this.currentSelectedData = { ...readyToShowData[0] };
+      // console.log(this.currentSelectedData)
+      this.currentSelectedDataId = id;
     },
-    fuzzySearch(value){
+    updateSelectedData(id, isDialogVisible, newTitle) {
+      this.selectedData = this.selectedData.map((eachSelectedData) => {
+        if (eachSelectedData.id === id) {
+          let newData = [...this.data];
+          return { ...eachSelectedData, title: newTitle, content: newData };
+        } else {
+          return eachSelectedData;
+        }
+      });
+      isDialogVisible(false);
+    },
+    fuzzySearch(value) {
       const options = {
-      keys: ["姓名","Email","服務單位","職稱","郵遞區號","地址","郵遞區號2","地址2","連絡電話_公司","連絡電話_秘書","連絡電話_住宅","連絡電話_手機","連絡電話1","連絡電話2","傳真電話","傳真2"],
-    };
-    const products = [...this.data]
-    const fuse = new Fuse(products, options);
-    const result =fuse.search(value)
-    let useData = result.map(one=>one.item)
-    this.data =[...useData]
-  }
+        keys: [
+          "姓名",
+          "Email",
+          "服務單位",
+          "職稱",
+          "郵遞區號",
+          "地址",
+          "郵遞區號2",
+          "地址2",
+          "連絡電話_公司",
+          "連絡電話_秘書",
+          "連絡電話_住宅",
+          "連絡電話_手機",
+          "連絡電話1",
+          "連絡電話2",
+          "傳真電話",
+          "傳真2",
+        ],
+      };
+      const products = [...this.data];
+      const fuse = new Fuse(products, options);
+      const result = fuse.search(value);
+      let useData = result.map((one) => one.item);
+      this.data = [...useData];
+    },
   },
 });
