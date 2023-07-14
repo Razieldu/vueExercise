@@ -44,7 +44,7 @@
         :key="eachObj.key"
         :label="eachObj.title"
         :prop="eachObj.title"
-        :width="eachObj === 'Email' ? 250 : 150"
+        :width="eachObj.title === 'Email' ? 250 : 150"
       >
         <template #default="{ row, $index }">
           <div
